@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
@@ -14,10 +14,13 @@
     .rail{width:116px;flex:0 0 116px;margin-top:72px;margin-right:-12px;z-index:2}
     .book{display:block;width:100%;padding:10px 9px;border:2px solid #76401d;border-right:0;background:#f2c39f;border-radius:10px 0 0 10px;font-weight:700;text-align:left;margin-bottom:7px;cursor:pointer}
     .book.on{background:linear-gradient(90deg,#ef8a3f,#c95b1c);color:#fff}
+    .book[data-cat="battle"].on{background:linear-gradient(90deg,#d88949,#b55b24);color:#fff}
     .subs{display:flex;flex-direction:column;gap:5px;padding-left:6px;margin-bottom:8px}
     .sub{border:2px solid #8f6c38;background:#fff4df;border-radius:999px;padding:6px 7px;font-size:12px;font-weight:700;cursor:pointer}
     .sub.on{background:#ffd978;border-color:#a87511}
     .panel{flex:1;height:100%;min-height:0;display:flex;flex-direction:column;background:linear-gradient(180deg,#f5954e,var(--scarlet));border:4px solid var(--border);border-radius:16px;box-shadow:0 12px 0 #a24d1f,0 24px 30px rgba(0,0,0,.24)}
+    .panel.battle-mode{background:linear-gradient(180deg,#f2a465,#d17637);box-shadow:0 12px 0 #984e24,0 24px 30px rgba(0,0,0,.24)}
+    .panel.battle-mode .top{background:linear-gradient(90deg,#ffd7ae,#e79252)}
     .top{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:4px solid var(--border);background:linear-gradient(90deg,#ffc58d,#f08334)}
     .title{font-family:"Press Start 2P",monospace;color:#fff;font-size:12px;line-height:1.5;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
     .screen{margin:8px;flex:1;min-height:0;display:flex;flex-direction:column;border:4px solid var(--border);border-radius:12px;background:var(--bg);padding:8px;overflow:hidden}
@@ -25,6 +28,11 @@
     .search{flex:1;height:36px;border:2px solid #8d6a2f;border-radius:9px;padding:0 10px;background:#fff}
     .count{font-size:13px;font-weight:700;color:#5b4528;white-space:nowrap}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px;flex:1;min-height:0;overflow:auto;align-content:start;padding-right:0}
+    .held-groups{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0;overflow:auto;padding-right:2px}
+    .held-group{border:2px solid #8b6733;border-radius:10px;background:#fff;padding:8px}
+    .held-group-title{margin:0 0 8px;font-size:14px;font-weight:800;color:#5c4526;display:flex;justify-content:space-between;align-items:center}
+    .held-group-title .cnt{font-size:12px;color:#7a6546}
+    .held-group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px}
     .card{position:relative;border:2px solid #8b6733;background:#fff;border-radius:10px;padding:8px;min-height:160px;text-align:center;cursor:pointer}
     .card:hover{transform:translateY(-1px)}
     .card.unob{background:#eceff2;border-color:#999fa7;color:#60656d}
@@ -53,6 +61,28 @@
     .box h3{margin:0 0 7px;font-size:14px;color:#4f3a1d}
     .box.scar h3{color:#b65111}.box.vio h3{color:#5f3fa3}
     .line{display:block;font-size:13px;line-height:1.42;margin-bottom:2px}
+    .egg-parents{text-align:left;white-space:normal;word-break:keep-all;line-height:1.35}
+    .guide-step{display:flex;flex-direction:column;gap:4px}
+    .guide-head{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+    .guide-thumb{width:54px;height:54px;flex:0 0 54px;object-fit:contain;border:1px solid #c6ab77;border-radius:10px;background:#fff7ea;padding:6px}
+    .guide-cap{font-size:12px;color:#705635}
+    .guide-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+    .guide-list li{font-size:13px;line-height:1.48;word-break:keep-all}
+    .guide-list li:nth-child(odd){color:#2f2a22}
+    .guide-list li:nth-child(even){color:#3a2f24}
+    .tx-key{color:#9d3a17;font-weight:800}
+    .tx-item{color:#5d3ea1;font-weight:800}
+    .tx-num{color:#1c7a55;font-weight:800}
+    .tx-place{color:#17618b;font-weight:800}
+    .tx-system{color:#7a4b00;font-weight:800}
+    .guide-note{margin-top:8px;padding:8px;border:1px solid #d8b17a;border-radius:9px;background:#fff9ef}
+    .guide-note strong{display:block;font-size:12px;color:#6b491f;margin-bottom:4px}
+    .held-ref td{vertical-align:top;text-align:left}
+    .held-ref th{text-align:center}
+    .held-ref td:nth-child(1),.held-ref td:nth-child(3){white-space:nowrap}
+    .held-ref td:nth-child(4){line-height:1.45}
+    .held-ref .ic{width:24px;height:24px;object-fit:contain;display:block;margin:0 auto}
+    .scroll-battle{height:100%;overflow:auto;padding-right:2px}
     .loc-list{margin:0;padding-left:18px}
     .loc-list li{font-size:13px;line-height:1.42;margin:2px 0;word-break:keep-all}
     .types{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
@@ -101,11 +131,8 @@
     .pc-mk{position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;border:2px solid #c62828;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;z-index:3}
     .pc-mk img{width:11px;height:11px;object-fit:contain}
     .map-wrap{position:sticky;top:0;z-index:2;background:#fff;max-height:72dvh;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-    .routes-scroll{max-height:320px;overflow:auto;padding-right:0}
-    .routes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
-    .rc{border:1px solid #97a2ae;border-radius:8px;padding:7px;background:rgba(255,255,255,.88);font-size:12px;line-height:1.35}
     .bdg{display:inline-block;color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 7px;margin-right:4px}
-    .bdg.g{background:#d96d20}.bdg.s{background:#6c46b5}.bdg.t{background:#238554}.bdg.f{background:#5a488f}
+    .bdg.g{background:#d96d20}.bdg.s{background:#6c46b5}.bdg.t{background:#238554}.bdg.f{background:#5a488f}.bdg.p{background:#c62828}
     @media (max-width:1080px){
       .app{flex-direction:column;align-items:stretch}
       .panel{width:100%}
@@ -120,6 +147,7 @@
       .meta-name{font-size:24px}
       .dtop img{width:92px;height:92px}
       .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+      .held-group-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
       .card{min-height:118px;padding:5px}
       .card img{width:44px;height:44px}
       .no{font-size:10px}
@@ -129,7 +157,6 @@
       .type-badge img{width:7px;height:7px}
       .map{width:100%}
       .map-wrap{max-height:56dvh}
-      .routes-scroll{max-height:220px;padding-right:0}
     }
   </style>
 </head>
@@ -139,7 +166,7 @@
       <button class="book on" data-cat="pokemon" type="button">포켓몬</button>
       <div id="p-subs" class="subs">
         <button class="sub on" data-dex="paldea" type="button">팔데아 도감</button>
-        <button class="sub" data-dex="national" type="button">전국도감</button>
+        <button class="sub" data-dex="national" type="button">전국 도감</button>
       </div>
       <button class="book" data-cat="tools" type="button">도구</button>
       <div id="t-subs" class="subs" style="display:none;">
@@ -147,14 +174,25 @@
         <button class="sub" data-tool="tm" type="button">기술머신</button>
       </div>
       <button class="book" data-cat="nature" type="button">성격</button>
-      <button class="book" data-cat="type-chart" type="button">타입상성</button>
+      <button class="book" data-cat="type-chart" type="button">타입상성표</button>
       <button class="book" data-cat="map" type="button">지도</button>
+      <button class="book" data-cat="battle" type="button">실전 포켓몬</button>
+      <div id="b-subs" class="subs" style="display:none;">
+        <button class="sub on" data-battle="b1" type="button">1 설계</button>
+        <button class="sub" data-battle="b2" type="button">2 알작</button>
+        <button class="sub" data-battle="b3" type="button">3 교배기</button>
+        <button class="sub" data-battle="b4" type="button">4 개체값</button>
+        <button class="sub" data-battle="b5" type="button">5 노력치</button>
+        <button class="sub" data-battle="b6" type="button">6 특성/테라</button>
+        <button class="sub" data-battle="b7" type="button">7 지닌물건</button>
+        <button class="sub" data-battle="b8" type="button">8 최종체크</button>
+      </div>
     </aside>
 
     <section class="panel">
       <header class="top">
         <div id="title" class="title">스칼렛/바이올렛 도감<br>팔데아 No.001-400</div>
-        <div>● ● ●</div>
+        <div>SV GUIDE</div>
       </header>
       <div class="screen">
         <div id="controls" class="controls">
@@ -180,10 +218,12 @@
         <button class="dtab on" data-pane="stats" type="button">능력치</button>
         <button class="dtab" data-pane="location" type="button">포획장소</button>
         <button class="dtab" data-pane="moves" type="button">배우는 기술</button>
+        <button class="dtab" data-pane="egg-moves" type="button">교배로 배우는 기술</button>
       </div>
       <section id="pane-stats" class="pane on"></section>
       <section id="pane-location" class="pane"></section>
       <section id="pane-moves" class="pane"></section>
+      <section id="pane-egg-moves" class="pane"></section>
       <button id="d-close" class="close" type="button">닫기</button>
     </div>
   </div>
@@ -211,28 +251,28 @@
       const fallbackItemIcon = "./assets/icons/items/key-item-ingame.png";
       const fallbackSpriteIcon = "./assets/icons/pokeball.svg";
 
-      const statKo = {"hp":"HP","attack":"공격","defense":"방어","special-attack":"특수공격","special-defense":"특수방어","speed":"스피드"};
+            const statKo = {"hp":"HP","attack":"공격","defense":"방어","special-attack":"특수공격","special-defense":"특수방어","speed":"스피드"};
       const typeColor = {normal:"#9a9a9a",fire:"#f57d31",water:"#4f8de3",electric:"#f7c531",grass:"#67b93c",ice:"#78d5d6",fighting:"#ce416b",poison:"#ab6ac8",ground:"#d6b55d",flying:"#8fa9de",psychic:"#ef5f8d",bug:"#91c12f",rock:"#c5b78c",ghost:"#6f5bc2",dragon:"#136dc4",dark:"#5a5465",steel:"#5f8ea2",fairy:"#ec8fe6"};
       const pokemonKoByEn = new Map([...paldea, ...national].map(p => [String(p.en || "").toLowerCase(), p.kr || p.en || ""]));
       const evoCache = new Map();
-      const routes = [
-        {o:1,k:"gym",n:"세르클 체육관",lv:"Lv.15",x:34,y:79,type:"벌레",badge:"./assets/icons/badges/bug.png",faceNo:216},
-        {o:2,k:"titan",n:"바위주인 클라프",lv:"Lv.16",x:56,y:74,boss:"클라프",faceNo:950},
-        {o:3,k:"gym",n:"볼풍 체육관",lv:"Lv.17",x:61,y:81,type:"풀",badge:"./assets/icons/badges/grass.png",faceNo:185},
-        {o:4,k:"titan",n:"하늘주인",lv:"Lv.19",x:12,y:61,boss:"떨구새",faceNo:962},
+            const routes = [
+        {o:1,k:"gym",n:"셀클 체육관",lv:"Lv.15",x:34,y:79,type:"벌레",badge:"./assets/icons/badges/bug.png",faceNo:216},
+        {o:2,k:"titan",n:"바위주인: 클로우프",lv:"Lv.16",x:56,y:74,boss:"클로우프",faceNo:950},
+        {o:3,k:"gym",n:"볼챔 체육관",lv:"Lv.17",x:61,y:81,type:"풀",badge:"./assets/icons/badges/grass.png",faceNo:185},
+        {o:4,k:"titan",n:"하늘주인",lv:"Lv.19",x:12,y:61,boss:"오토실",faceNo:962},
         {o:5,k:"star",n:"스타단 악반",lv:"Lv.21",x:29,y:58,type:"악",faceNo:624},
-        {o:6,k:"gym",n:"동부 체육관",lv:"Lv.24",x:76,y:53,type:"전기",badge:"./assets/icons/badges/electric.png",faceNo:429},
-        {o:7,k:"star",n:"스타단 불반",lv:"Lv.27",x:69,y:66,type:"불꽃",faceNo:324},
+        {o:6,k:"gym",n:"카라프 체육관",lv:"Lv.24",x:76,y:53,type:"전기",badge:"./assets/icons/badges/electric.png",faceNo:429},
+        {o:7,k:"star",n:"스타단 불꽃반",lv:"Lv.27",x:69,y:66,type:"불꽃",faceNo:324},
         {o:8,k:"titan",n:"강철주인",lv:"Lv.28",x:75,y:46,boss:"꿈트렁",faceNo:968},
-        {o:9,k:"gym",n:"카라프 체육관",lv:"Lv.30",x:32,y:52,type:"물",badge:"./assets/icons/badges/water.png",faceNo:740},
+        {o:9,k:"gym",n:"카시야 체육관",lv:"Lv.30",x:32,y:52,type:"물",badge:"./assets/icons/badges/water.png",faceNo:740},
         {o:10,k:"star",n:"스타단 독반",lv:"Lv.33",x:59,y:43,type:"독",faceNo:965},
-        {o:11,k:"gym",n:"메자포타 체육관",lv:"Lv.36",x:38,y:40,type:"노말",badge:"./assets/icons/badges/normal.png",faceNo:398},
-        {o:12,k:"gym",n:"몬테네베라 체육관",lv:"Lv.42",x:54,y:22,type:"고스트",badge:"./assets/icons/badges/ghost.png",faceNo:849},
-        {o:13,k:"titan",n:"땅주인",lv:"Lv.44",x:11,y:47,boss:"위대한 엄니 / 무쇠바퀴",faceNo:984},
-        {o:14,k:"gym",n:"알포르나다 체육관",lv:"Lv.45",x:13,y:89,type:"에스퍼",badge:"./assets/icons/badges/psychic.png",faceNo:671},
-        {o:15,k:"gym",n:"글라세도 체육관",lv:"Lv.48",x:54,y:32,type:"얼음",badge:"./assets/icons/badges/ice.png",faceNo:334},
+        {o:11,k:"gym",n:"메자모 체육관",lv:"Lv.36",x:38,y:40,type:"노말",badge:"./assets/icons/badges/normal.png",faceNo:398},
+        {o:12,k:"gym",n:"프리지 체육관",lv:"Lv.42",x:54,y:22,type:"고스트",badge:"./assets/icons/badges/ghost.png",faceNo:849},
+        {o:13,k:"titan",n:"땅주인",lv:"Lv.44",x:11,y:47,boss:"모래털가죽 / 무쇠바퀴",faceNo:984},
+        {o:14,k:"gym",n:"한카리아 체육관",lv:"Lv.45",x:13,y:89,type:"에스퍼",badge:"./assets/icons/badges/psychic.png",faceNo:671},
+        {o:15,k:"gym",n:"금석 체육관",lv:"Lv.48",x:54,y:32,type:"얼음",badge:"./assets/icons/badges/ice.png",faceNo:334},
         {o:16,k:"star",n:"스타단 페어리반",lv:"Lv.51",x:49,y:12,type:"페어리",faceNo:184},
-        {o:17,k:"titan",n:"거짓드래곤 주인",lv:"Lv.55",x:31,y:29,boss:"어써러셔 / 싸리용",faceNo:977},
+        {o:17,k:"titan",n:"거짓드래곤주인",lv:"Lv.55",x:31,y:29,boss:"어써러셔 / 헨느",faceNo:977},
         {o:18,k:"star",n:"스타단 격투반",lv:"Lv.56",x:87,y:38,type:"격투",faceNo:979},
         {o:19,k:"final",n:"최종전",lv:"Lv.62",x:44,y:61,type:"종합",faceNo:1007}
       ];
@@ -240,6 +280,7 @@
       const books = [...document.querySelectorAll(".book")];
       const pSubs = [...document.querySelectorAll("#p-subs .sub")];
       const tSubs = [...document.querySelectorAll("#t-subs .sub")];
+      const bSubs = [...document.querySelectorAll("#b-subs .sub")];
       const dTabs = [...document.querySelectorAll(".dtab")];
 
       const titleEl = document.getElementById("title");
@@ -248,6 +289,7 @@
       const footEl = document.getElementById("footer");
       const controlsEl = document.getElementById("controls");
       const gridEl = document.getElementById("grid");
+      const panelEl = document.querySelector(".panel");
 
       const overlay = document.getElementById("overlay");
       const dImg = document.getElementById("d-img");
@@ -257,10 +299,12 @@
       const paneStats = document.getElementById("pane-stats");
       const paneLocation = document.getElementById("pane-location");
       const paneMoves = document.getElementById("pane-moves");
+      const paneEggMoves = document.getElementById("pane-egg-moves");
 
       let category = "pokemon";
       let dexScope = "paldea";
       let toolScope = "held";
+      let battleScope = "b1";
       let query = "";
       let activePane = "stats";
       let detailToken = 0;
@@ -270,14 +314,14 @@
       const faceImg = (n) => "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + n + ".png";
       const starIcon = "./assets/icons/team-star.png";
       const centerIcon = "./assets/icons/pokeball.svg";
-      const centers = [
+            const centers = [
         {n:"남부 1번 포켓몬센터",x:46,y:84},{n:"남부 2번 포켓몬센터",x:56,y:83},{n:"남부 3번 포켓몬센터",x:40,y:74},
         {n:"남부 4번 포켓몬센터",x:44,y:65},{n:"남부 5번 포켓몬센터",x:30,y:73},{n:"서부 1번 포켓몬센터",x:23,y:65},
         {n:"서부 2번 포켓몬센터",x:19,y:52},{n:"서부 3번 포켓몬센터",x:22,y:40},{n:"동부 1번 포켓몬센터",x:69,y:61},
         {n:"동부 2번 포켓몬센터",x:78,y:60},{n:"동부 3번 포켓몬센터",x:83,y:49},{n:"북부 1번 포켓몬센터",x:52,y:28},
         {n:"북부 2번 포켓몬센터",x:67,y:25},{n:"북부 3번 포켓몬센터",x:67,y:14},{n:"북부 4번 포켓몬센터",x:40,y:18},
-        {n:"글라세도산 포켓몬센터",x:60,y:18},{n:"카세로야호수 포켓몬센터",x:31,y:30},{n:"나페산 포켓몬센터",x:57,y:39},
-        {n:"고정행시티 인근 포켓몬센터",x:53,y:53},{n:"참푸르마을 인근 포켓몬센터",x:64,y:74}
+        {n:"금석산 포켓몬센터",x:60,y:18},{n:"카세로야호수 포켓몬센터",x:31,y:30},{n:"아르페르 포켓몬센터",x:57,y:39},
+        {n:"고정화도시 입구 포켓몬센터",x:53,y:53},{n:"참푸르마을 입구 포켓몬센터",x:64,y:74}
       ];
       const split = (raw) => String(raw || "").split(/,\s*/).filter(Boolean);
       const toolIconSrc = (e) => {
@@ -291,7 +335,7 @@
         if(txt.includes("\\n")) return txt.split(/\\r?\\n/).map(v=>v.trim()).filter(Boolean);
         return txt.split(/,\s*/).map(v=>v.trim()).filter(Boolean);
       };
-      const heldCategoryOrder = ["열매","플레이트/메모리","진화","날씨/필드","전투 소모","전투 보조","능력치 강화","타입 강화","기타"];
+            const heldCategoryOrder = ["열매","플레이트/메모리","진화","날씨/필드","전투 소모","전투 보조","능력치 강화","타입 강화","기타"];
       const heldCategory = (e) => {
         const kr = String(e.kr || "");
         const en = String(e.en || "");
@@ -299,12 +343,12 @@
         const txt = (kr + " " + en + " " + ef).toLowerCase();
         if(txt.includes("berry") || kr.includes("열매")) return "열매";
         if(txt.includes("plate") || txt.includes("memory") || kr.includes("플레이트") || kr.includes("메모리")) return "플레이트/메모리";
-        if(txt.includes("진화") || txt.includes("evolve") || txt.includes("stone") || kr.includes("사과") || kr.includes("가면")) return "진화";
-        if(txt.includes("rain") || txt.includes("sun") || txt.includes("snow") || txt.includes("sand") || txt.includes("terrain") || kr.includes("날씨") || kr.includes("모래") || kr.includes("눈") || kr.includes("비") || kr.includes("필드")) return "날씨/필드";
-        if(txt.includes("소모") || txt.includes("once") || txt.includes("한 번") || txt.includes("일회용") || txt.includes("소비")) return "전투 소모";
-        if(txt.includes("정확도") || txt.includes("accuracy") || txt.includes("회피") || txt.includes("급소") || txt.includes("우선도") || txt.includes("critical")) return "전투 보조";
-        if(txt.includes("공격") || txt.includes("방어") || txt.includes("특수") || txt.includes("스피드") || txt.includes("능력치") || txt.includes("stat")) return "능력치 강화";
-        if(txt.includes("타입") || txt.includes("type") || txt.includes("위력") || txt.includes("power")) return "타입 강화";
+        if(txt.includes("evolve") || txt.includes("evolution") || txt.includes("stone") || kr.includes("진화") || kr.includes("각성")) return "진화";
+        if(txt.includes("rain") || txt.includes("sun") || txt.includes("snow") || txt.includes("sand") || txt.includes("terrain") || kr.includes("날씨") || kr.includes("모래") || kr.includes("비") || kr.includes("눈") || kr.includes("필드")) return "날씨/필드";
+        if(txt.includes("consum") || txt.includes("one-time") || txt.includes("once") || kr.includes("소모") || kr.includes("한 번") || kr.includes("일회") || kr.includes("사용 후")) return "전투 소모";
+        if(txt.includes("accuracy") || txt.includes("critical") || txt.includes("priority") || kr.includes("명중") || kr.includes("급소") || kr.includes("우선도") || kr.includes("보조")) return "전투 보조";
+        if(txt.includes("attack") || txt.includes("defense") || txt.includes("special") || txt.includes("speed") || txt.includes("stat") || kr.includes("공격") || kr.includes("방어") || kr.includes("특수") || kr.includes("스피드") || kr.includes("능력치")) return "능력치 강화";
+        if(txt.includes("type") || txt.includes("power") || kr.includes("타입") || kr.includes("위력")) return "타입 강화";
         return "기타";
       };
       const sortHeldByCategory = (arr) => {
@@ -318,7 +362,21 @@
           return String(a.kr || "").localeCompare(String(b.kr || ""), "ko");
         });
       };
-
+      const heldCardHtml = (e) => "<button class='card' data-no='"+esc(e.no)+"' type='button'><img loading='lazy' src='"+esc(toolIconSrc(e))+"' alt='물건' onerror=\"this.onerror=null;this.src='./assets/icons/items/key-item-ingame.png';\"><div class='no'>ITEM "+esc(String(e.no).padStart(3,"0"))+"</div><div class='name'>"+esc(e.kr)+"</div></button>";
+      const heldGroupedHtml = (arr) => {
+        const groups = new Map(heldCategoryOrder.map(c=>[c,[]]));
+        (arr || []).forEach(e=>{
+          const cat = heldCategory(e);
+          if(!groups.has(cat)) groups.set(cat, []);
+          groups.get(cat).push(e);
+        });
+        const sections = [];
+        groups.forEach((items, cat)=>{
+          if(!items.length) return;
+          sections.push("<section class='held-group'><h3 class='held-group-title'><span>"+esc(cat)+"</span><span class='cnt'>"+items.length+"개</span></h3><div class='held-group-grid'>"+items.map(heldCardHtml).join("")+"</div></section>");
+        });
+        return sections.join("") || "<div class='wrap'>검색 결과가 없습니다.</div>";
+      };
       const captureExtra = (raw) => {
         const txt = String(raw || "");
         if(!txt) return [];
@@ -381,7 +439,7 @@
         return "<ul class='loc-list'>" + items + "</ul>";
       }
       function renderLocationPane(sList, vList, evoHtml){
-        paneLocation.innerHTML="<div class='pane-grid'><section class='box scar'><h3>스칼렛 포획/입수</h3>"+sList+"</section><section class='box vio'><h3>바이올렛 포획/입수</h3>"+vList+"</section><section class='box'><h3>진화 조건</h3>"+evoHtml+"</section></div>";
+        paneLocation.innerHTML = "<div class='pane-grid'><section class='box scar'><h3>스칼렛 포획/입수</h3>"+sList+"</section><section class='box vio'><h3>바이올렛 포획/입수</h3>"+vList+"</section><section class='box'><h3>진화 조건</h3>"+evoHtml+"</section></div>";
       }
 
       function typeChip(key){
@@ -397,22 +455,49 @@
         return [];
       }
 
-      function header(){
-        if(category==="pokemon"){ titleEl.innerHTML = dexScope==="national" ? "스칼렛/바이올렛 도감<br>전국 No.001-1025" : "스칼렛/바이올렛 도감<br>팔데아 No.001-400"; return; }
-        if(category==="tools"){ titleEl.innerHTML = toolScope==="tm" ? "스칼렛/바이올렛 도구<br>기술머신 No.001-229" : "스칼렛/바이올렛 도구<br>지닌물건"; return; }
+            function header(){
+        if(category==="pokemon"){
+          titleEl.innerHTML = dexScope==="national"
+            ? "스칼렛/바이올렛 도감<br>전국 No.001-1025"
+            : "스칼렛/바이올렛 도감<br>팔데아 No.001-400";
+          return;
+        }
+        if(category==="tools"){
+          titleEl.innerHTML = toolScope==="tm"
+            ? "스칼렛/바이올렛 도구<br>기술머신 No.001-229"
+            : "스칼렛/바이올렛 도구<br>지닌물건";
+          return;
+        }
         if(category==="nature"){ titleEl.innerHTML="스칼렛/바이올렛 공략<br>성격표"; return; }
-        if(category==="type-chart"){ titleEl.innerHTML="스칼렛/바이올렛 공략<br>9세대 타입상성"; return; }
-        titleEl.innerHTML="스칼렛/바이올렛 공략<br>팔데아 추천 공략 순서";
+        if(category==="type-chart"){ titleEl.innerHTML="스칼렛/바이올렛 공략<br>9세대 타입 상성표"; return; }
+        if(category==="battle"){
+          const battleTitle = {
+            b1:"1단계 파티 설계",
+            b2:"2단계 알작",
+            b3:"3단계 교배기",
+            b4:"4단계 개체값",
+            b5:"5단계 노력치",
+            b6:"6단계 특성/테라",
+            b7:"7단계 지닌물건",
+            b8:"8단계 최종체크"
+          };
+          titleEl.innerHTML = "스칼렛/바이올렛 실전<br>" + (battleTitle[battleScope] || "실전 개체 제작 가이드");
+          return;
+        }
+        titleEl.innerHTML = "스칼렛/바이올렛 공략<br>팔데아 추천 공략 순서";
       }
 
       function syncTabs(){
         document.getElementById("p-subs").style.display = category==="pokemon" ? "flex":"none";
         document.getElementById("t-subs").style.display = category==="tools" ? "flex":"none";
+        document.getElementById("b-subs").style.display = category==="battle" ? "flex":"none";
         pSubs.forEach(x=>x.classList.toggle("on",x.dataset.dex===dexScope));
         tSubs.forEach(x=>x.classList.toggle("on",x.dataset.tool===toolScope));
+        bSubs.forEach(x=>x.classList.toggle("on",x.dataset.battle===battleScope));
       }
 
       function syncCtrl(){ controlsEl.style.display = (category==="pokemon"||category==="tools") ? "flex":"none"; }
+      function syncTheme(){ panelEl.classList.toggle("battle-mode", category==="battle"); }
 
       function match(e,q){
         if(!q) return true;
@@ -426,6 +511,11 @@
         const show = all.filter(e=>match(e,q));
         countEl.textContent = "표시: " + show.length + " / " + all.length;
         footEl.textContent = category==="pokemon" ? "포켓몬 목록" : "도구 목록";
+        if(category==="tools" && toolScope==="held"){
+          gridEl.className = "held-groups";
+          gridEl.innerHTML = heldGroupedHtml(show);
+          return;
+        }
         gridEl.className = "grid";
         gridEl.innerHTML = show.map(e=>{
           if(category==="pokemon"){
@@ -447,10 +537,9 @@
           if(toolScope==="tm"){
             return "<button class='card' data-no='"+esc(e.no)+"' type='button'><img loading='lazy' src='./assets/icons/items/tm-ingame.png' alt='TM'><div class='no'>"+esc(e.code||"TM")+"</div><div class='name'>"+esc(e.kr)+"</div></button>";
           }
-          return "<button class='card' data-no='"+esc(e.no)+"' type='button'><img loading='lazy' src='"+esc(toolIconSrc(e))+"' alt='물건' onerror=\"this.onerror=null;this.src='./assets/icons/items/key-item-ingame.png';\"><div class='no'>ITEM "+esc(String(e.no).padStart(3,"0"))+"</div><div class='name'>"+esc(e.kr)+"</div></button>";
+          return heldCardHtml(e);
         }).join("");
       }
-
       function renderNature(){
         const stats=["attack","defense","special-attack","special-defense","speed"];
         const m = new Map(); natures.forEach(n=>m.set((n.up||"")+"/"+(n.down||""),n));
@@ -462,11 +551,11 @@
           }).join("");
           return "<tr><th>"+esc(statKo[down])+" ↓</th>"+cells+"</tr>";
         }).join("");
-        gridEl.className="wrap"; gridEl.innerHTML="<table class='nature'><thead><tr><th>상승/하락</th>"+head+"</tr></thead><tbody>"+body+"</tbody></table>";
+        gridEl.className="wrap";
+        gridEl.innerHTML="<table class='nature'><thead><tr><th>상승/하락</th>"+head+"</tr></thead><tbody>"+body+"</tbody></table>";
         countEl.textContent = "성격: " + natures.length;
-        footEl.textContent = "물리/특수 타입 패널은 제거하고 성격 표만 유지했습니다.";
+        footEl.textContent = "물리/특수 방향에 맞춰 성격을 선택하세요.";
       }
-
       function renderType(){
         const order = Array.isArray(chart.order)?chart.order:[];
         const eff = chart.effectiveness || {};
@@ -486,7 +575,8 @@
           const cols=order.map((d,di)=>{ const r=eff[a]||{}; const v=typeof r[d]==="number"?r[d]:1; return "<td data-row='"+ai+"' data-col='"+di+"' class='"+cls(v)+"'>"+txt(v)+"</td>"; }).join("");
           return "<tr><th data-row='"+ai+"' title='"+esc(typeLabel(a))+"'>"+typeHead(a)+"</th>"+cols+"</tr>";
         }).join("");
-        gridEl.className="wrap"; gridEl.innerHTML="<div class='scroll'><table class='type type-compact'><thead><tr><th>공격\\\\방어</th>"+head+"</tr></thead><tbody>"+rows+"</tbody></table></div>";
+        gridEl.className="wrap";
+        gridEl.innerHTML="<div class='scroll'><table class='type type-compact'><thead><tr><th>공격\\방어</th>"+head+"</tr></thead><tbody>"+rows+"</tbody></table></div>";
         countEl.textContent = "타입 수: " + order.length;
         footEl.textContent = "페어리 포함 9세대 타입 상성표입니다.";
         const table = gridEl.querySelector("table.type");
@@ -512,36 +602,34 @@
           table.addEventListener("mouseleave", clearHover);
         }
       }
-
       function renderMap(){
-        const kindClass = (k)=>k==='gym'?'g':(k==='star'?'s':(k==='titan'?'t':'f'));
-        const tipText = (r)=>{
-          const kind = r.k==='gym' ? '체육관' : (r.k==='star' ? '스타단' : (r.k==='titan' ? '주인' : '최종전'));
-          const extra = r.k==='titan' ? ("주인 포켓몬: " + (r.boss || "-")) : ("타입: " + (r.type || "-"));
-          return r.o + ". " + r.n + " | " + kind + " | 권장 레벨 " + r.lv + " | " + extra;
+        const kindClass = (k)=>k==='gym' ? 'g' : (k==='star' ? 's' : (k==='titan' ? 't' : 'f'));
+        const kindLabel = (k)=>k==='gym' ? '체육관' : (k==='star' ? '스타단' : (k==='titan' ? '주인' : '최종전'));
+        const tipHtml = (r)=>{
+          const kind = kindLabel(r.k);
+          const extra = r.k==='titan'
+            ? ("<br>주인 포켓몬: " + esc(r.boss || "-"))
+            : ("<br>타입: " + esc(r.type || "-"));
+          return "<span class='bdg " + kindClass(r.k) + "'>" + kind + "</span><strong>" + esc(r.o + ". " + r.n) + "</strong><br>권장 레벨: " + esc(r.lv) + extra;
         };
         const marks = routes.map(r=>{
           const src = r.k==='gym' && r.badge ? r.badge : (r.k==='star' ? starIcon : faceImg(r.faceNo || 25));
-          const faceClass = "mk-face "+kindClass(r.k)+((r.k==='gym' || r.k==='star') ? " icon" : "");
-          const tip = esc(tipText(r));
+          const faceClass = "mk-face " + kindClass(r.k) + ((r.k==='gym' || r.k==='star') ? " icon" : "");
+          const tip = esc(tipHtml(r));
           const face = "<span class='"+faceClass+" map-hover' data-tip='"+tip+"' data-tip-kind='"+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'><img src='"+esc(src)+"' alt='face' onerror=\"this.onerror=null;this.src='"+esc(fallbackSpriteIcon)+"';\"></span>";
           const dot = "<span class='mk "+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'></span>";
           const label = "<span class='mk-label map-hover' data-tip='"+tip+"' data-tip-kind='"+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'>"+esc(r.o)+"</span>";
           return face + dot + label;
         }).join("");
         const centerMarks = centers.map(c=>{
-          const tip = esc("포켓몬센터 | " + c.n);
+          const tip = esc("<span class='bdg p'>포켓몬센터</span><strong>" + (c.n || "-") + "</strong>");
           return "<span class='pc-mk map-hover' data-tip-kind='p' data-tip='"+tip+"' style='left:"+c.x+"%;top:"+c.y+"%;'><img src='"+esc(centerIcon)+"' alt='center' onerror=\"this.onerror=null;this.src='"+esc(fallbackSpriteIcon)+"';\"></span>";
         }).join("");
-        const cards = routes.map(r=>{
-          const tag = r.k==='gym' ? '체육관' : (r.k==='star' ? '스타단' : (r.k==='titan' ? '주인' : '최종전'));
-          const extra = r.k==='titan' ? ("<br>주인 포켓몬: " + esc(r.boss || "-")) : ("<br>타입: " + esc(r.type || "-"));
-          return "<div class='rc'><span class='bdg "+kindClass(r.k)+"'>"+tag+"</span><strong>"+esc(r.o+". "+r.n)+"</strong><br>권장 레벨: "+esc(r.lv)+extra+"</div>";
-        }).join("");
         gridEl.className="wrap";
-        gridEl.innerHTML="<h3 style='margin:0 0 8px;font-size:16px;color:#394639;font-weight:800;'>팔데아 지방 지도 + 추천 공략 순서</h3><div class='map-wrap'><div class='map'>"+centerMarks+marks+"</div></div><div class='routes-scroll'><div class='routes'>"+cards+"</div></div>";
+        gridEl.innerHTML="<h3 style='margin:0 0 8px;font-size:16px;color:#394639;font-weight:800;'>팔데아 지도 + 추천 공략 순서</h3><div class='map-wrap'><div class='map'>"+centerMarks+marks+"</div></div>";
         countEl.textContent = "메인 공략 단계: " + routes.length;
-        footEl.textContent = "체육관 · 스타단 · 주인 · 최종전 권장 순서를 지도에 표시했습니다.";
+        footEl.textContent = "체육관 / 스타단 / 주인 / 최종전 권장 순서를 지도에 표시합니다.";
+
         let tipEl = document.getElementById("map-tip-float");
         if(!tipEl){
           tipEl = document.createElement("div");
@@ -549,76 +637,320 @@
           tipEl.className = "map-tip-float";
           document.body.appendChild(tipEl);
         }
-        const placeTip = (ev)=>{
+
+        const eventPoint = (ev)=>{
+          const touch = (ev && ev.touches && ev.touches[0]) || (ev && ev.changedTouches && ev.changedTouches[0]);
+          const src = touch || ev || {};
+          return {
+            x: typeof src.clientX === "number" ? src.clientX : (window.innerWidth / 2),
+            y: typeof src.clientY === "number" ? src.clientY : (window.innerHeight / 2)
+          };
+        };
+        const placeTip = (x, y)=>{
           const pad = 14;
-          let x = ev.clientX + 14;
-          let y = ev.clientY + 18;
+          let nx = x + 14;
+          let ny = y + 18;
           const w = tipEl.offsetWidth || 280;
           const h = tipEl.offsetHeight || 60;
-          if(x + w + pad > window.innerWidth) x = window.innerWidth - w - pad;
-          if(y + h + pad > window.innerHeight) y = window.innerHeight - h - pad;
-          if(x < pad) x = pad;
-          if(y < pad) y = pad;
-          tipEl.style.left = x + "px";
-          tipEl.style.top = y + "px";
+          if(nx + w + pad > window.innerWidth) nx = window.innerWidth - w - pad;
+          if(ny + h + pad > window.innerHeight) ny = window.innerHeight - h - pad;
+          if(nx < pad) nx = pad;
+          if(ny < pad) ny = pad;
+          tipEl.style.left = nx + "px";
+          tipEl.style.top = ny + "px";
         };
+        const showTip = (el, ev)=>{
+          tipEl.innerHTML = el.getAttribute("data-tip") || "";
+          tipEl.className = "map-tip-float " + (el.getAttribute("data-tip-kind") || "");
+          tipEl.style.display = "block";
+          const pt = eventPoint(ev);
+          placeTip(pt.x, pt.y);
+        };
+        const hideTip = ()=>{ tipEl.style.display = "none"; };
+
         const hovers = gridEl.querySelectorAll(".map-hover");
+        let touchModeUntil = 0;
+        let touchAnchor = null;
         hovers.forEach(el=>{
           el.addEventListener("mouseenter", (ev)=>{
-            tipEl.textContent = el.getAttribute("data-tip") || "";
-            tipEl.className = "map-tip-float " + (el.getAttribute("data-tip-kind") || "");
-            tipEl.style.display = "block";
-            placeTip(ev);
+            if(Date.now() < touchModeUntil || touchAnchor) return;
+            showTip(el, ev);
           });
-          el.addEventListener("mousemove", (ev)=>{ placeTip(ev); });
+          el.addEventListener("mousemove", (ev)=>{
+            if(Date.now() < touchModeUntil || touchAnchor || tipEl.style.display !== "block") return;
+            const pt = eventPoint(ev);
+            placeTip(pt.x, pt.y);
+          });
           el.addEventListener("mouseleave", ()=>{
-            tipEl.style.display = "none";
+            if(touchAnchor) return;
+            hideTip();
           });
+          el.addEventListener("touchstart", (ev)=>{
+            touchModeUntil = Date.now() + 700;
+            if(touchAnchor === el && tipEl.style.display === "block"){
+              touchAnchor = null;
+              hideTip();
+              ev.preventDefault();
+              return;
+            }
+            touchAnchor = el;
+            showTip(el, ev);
+            ev.preventDefault();
+          }, { passive:false });
+          el.addEventListener("touchmove", (ev)=>{
+            touchModeUntil = Date.now() + 700;
+            if(touchAnchor !== el || tipEl.style.display !== "block") return;
+            const pt = eventPoint(ev);
+            placeTip(pt.x, pt.y);
+            ev.preventDefault();
+          }, { passive:false });
+          el.addEventListener("touchend", ()=>{ touchModeUntil = Date.now() + 700; });
         });
-      }
 
+        const mapWrap = gridEl.querySelector(".map-wrap");
+        if(mapWrap){
+          mapWrap.addEventListener("touchstart", (ev)=>{
+            if(ev.target.closest(".map-hover")) return;
+            touchAnchor = null;
+            hideTip();
+          }, { passive:true });
+          mapWrap.addEventListener("click", (ev)=>{
+            if(ev.target.closest(".map-hover")) return;
+            touchAnchor = null;
+            hideTip();
+          });
+        }
+      }
+      function renderBattleGuide(){
+        gridEl.className = "wrap scroll-battle";
+        const imgFallback = "./assets/icons/items/key-item-ingame.png";
+        const reEsc = (s)=>String(s||"").replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+        const paint = (raw)=>{
+          let out = esc(raw || "");
+          const mark = (tokens, cls)=>{
+            tokens.slice().sort((a,b)=>b.length-a.length).forEach(t=>{
+              out = out.replace(new RegExp(reEsc(t), "g"), "<span class='"+cls+"'>"+t+"</span>");
+            });
+          };
+          out = out.replace(/(\d+V|\d+\/\d+\/\d+|Lv\.?\d+|\+\d+|EV|\d+개|\d+마리)/g, "<span class='tx-num'>$1</span>");
+          mark(["스위퍼","탱커","서포터","기점","실전","파밍"], "tx-key");
+          mark(["민트","변함없는돌","빨간실","파워아이템","파워웨이트","파워리스트","파워벨트","파워렌즈","파워밴드","파워앵클릿","미러허브","병뚜껑","금병뚜껑","특성캡슐","특성패치","테라피스"], "tx-item");
+          mark(["테이블시티","딜리버드 포장점","프리지마을","메달리","포코 패스","남부 1구역","남부 2구역","남부 3구역","남부 5구역","서부 1구역"], "tx-place");
+          mark(["피크닉","하이퍼트레이닝","테라레이드","레이드","알파워","비타민","노력치","개체값","성격","특성","테라타입","지닌물건","교배기"], "tx-system");
+          return out;
+        };
+        const pages = [
+          {
+            key:"b1",
+            title:"1) 파티 설계",
+            caption:"역할과 성격을 먼저 고정하면 나머지 세팅이 쉬워집니다.",
+            img:"./assets/icons/master-ball.png",
+            bullets:[
+              "먼저 역할을 정합니다: 스위퍼(에이스), 탱커, 서포터, 기점 생성.",
+              "물리 스위퍼 추천 성격: 고집, 명랑. 특수 스위퍼 추천 성격: 조심, 겁쟁이.",
+              "물리 탱커 추천 성격: 장난꾸러기, 무사태평. 특수 탱커 추천 성격: 차분, 신중.",
+              "성격 변경은 민트로 처리합니다. 민트는 테이블시티의 럭키상점에서 구매 가능합니다.",
+              "민트는 능력치 보정만 바꾸고, 성격 이름 자체는 바뀌지 않습니다."
+            ],
+            note:"실전용은 역할-성격-특성-아이템-기술 4칸을 한 세트로 잠그고 시작하면 시행착오가 크게 줄어듭니다."
+          },
+          {
+            key:"b2",
+            title:"2) 알작 기본 세팅",
+            caption:"변함없는돌, 빨간실, 파워아이템을 준비합니다.",
+            img:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/destiny-knot.png",
+            bullets:[
+              "피크닉에서 알을 받습니다. 보통 암컷(또는 메타몽)과 수컷 조합을 사용합니다.",
+              "성격 고정: 변함없는돌. 개체값 유전 강화: 빨간실. 특정 능력치 유전: 파워아이템.",
+              "변함없는돌은 일반 상점에서 쉽게 구할 수 있고, 빨간실은 딜리버드 포장점에서 구매 가능합니다.",
+              "알을 빠르게 모으려면 알파워 샌드위치를 사용합니다. 예: 알파워 Lv2 레시피.",
+              "알파워 Lv3는 비전스파이스가 필요하므로 초반/중반에는 Lv2 운용이 효율적입니다."
+            ],
+            note:"피크닉 바구니를 비워 주는 주기를 짧게 가져가면 알 수급 속도가 올라갑니다."
+          },
+          {
+            key:"b3",
+            title:"3) 교배기 세팅",
+            caption:"교배 루트 또는 미러허브 전달로 원하는 기술을 맞춥니다.",
+            img:"./assets/icons/items/tm-ingame.png",
+            bullets:[
+              "도감의 교배기 탭에서 목표 기술과 부모 후보를 먼저 확인합니다.",
+              "정석 루트는 같은 알그룹 부모에게 목표 기술을 유전시키는 방식입니다.",
+              "미러허브 전달은 알그룹이 달라도 가능하며, 실전 준비 시간이 짧습니다.",
+              "미러허브는 딜리버드 포장점에서 구매 가능합니다.",
+              "빈 기술칸 1개를 만들고 피크닉을 열면 전달 기술이 들어옵니다."
+            ],
+            note:"교배기 후보가 많을 때는 미러허브 전달이 가장 빠른 우회 루트입니다."
+          },
+          {
+            key:"b4",
+            title:"4) 개체값 보정",
+            caption:"병뚜껑과 왕관으로 부족한 개체값을 실전 기준으로 보정합니다.",
+            img:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/bottle-cap.png",
+            bullets:[
+              "실전 표준은 보통 5V(또는 6V)입니다. 공격 미사용 특수형은 공격 개체값을 비워도 됩니다.",
+              "병뚜껑은 딜리버드 포장점에서 구매할 수 있고, 레이드 보상으로도 획득됩니다.",
+              "사용처는 프리지마을 포켓몬센터 근처의 하이퍼트레이닝 NPC입니다.",
+              "하이퍼트레이닝은 레벨 50 이상 포켓몬이 대상입니다.",
+              "병뚜껑 1개는 능력치 1개, 금병뚜껑은 전체 능력치를 한 번에 보정합니다."
+            ],
+            note:"개체값 보정은 유전값을 바꾸는 개념이 아니라 실전 전투용 스탯 보정입니다."
+          },
+          {
+            key:"b5",
+            title:"5) 노력치(EV) 분배",
+            caption:"252/252/4 기준으로 빠르게 분배하고 마지막 4를 미세 조정합니다.",
+            img:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-weight.png",
+            bullets:[
+              "기본 분배 예시: 252 / 252 / 4. 능력치별 최대 252, 총합 510입니다.",
+              "비타민 1개는 EV +10입니다. 26개 사용 시 해당 능력치 252에 맞출 수 있습니다.",
+              "비타민 종류: 맥스업(HP), 타우린(공격), 브로무헥신(방어), 리보플라빈(특수공격), 인텔리전(특수방어), 알칼로이드(스피드).",
+              "야생 사냥 예시(공격 EV): 파워리스트를 지니고 공격 EV를 주는 포켓몬을 반복 처치합니다.",
+              "파워아이템(파워웨이트/리스트/벨트/렌즈/밴드/앵클릿) 장착 시, 해당 능력치 EV를 추가로 +8 획득합니다.",
+              "잘못 준 EV는 노력치 하락 열매로 초기화 또는 미세 조정할 수 있습니다."
+            ],
+            note:"시간이 없으면 비타민으로 큰 틀을 맞추고, 야생 사냥으로 남은 수치를 정밀 보정하세요."
+          },
+          {
+            key:"b6",
+            title:"6) 특성/테라 조정",
+            caption:"특성캡슐, 특성패치, 테라피스로 최종 전투 성능을 맞춥니다.",
+            img:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ability-capsule.png",
+            bullets:[
+              "특성캡슐은 일반 특성 1번/2번을 서로 바꾸는 아이템입니다(일반 특성 1개 종은 변화 없음).",
+              "특성캡슐은 상점 판매 또는 레이드 보상으로 수급할 수 있습니다.",
+              "특성패치는 주로 고난도 테라레이드 보상으로 획득하며, 사용 시 숨겨진 특성으로 바뀝니다.",
+              "테라피스는 테라레이드 보상과 필드 결정 파괴로 모읍니다.",
+              "테라타입 변경은 해당 타입 테라피스 50개가 필요하며, 메달리 체육관 식당 NPC에게 맡깁니다."
+            ],
+            note:"특성패치는 귀한 자원이라, 실전 채용이 확정된 개체에만 사용하는 편이 효율적입니다."
+          },
+          {
+            key:"b7",
+            title:"7) 지닌물건 세팅",
+            caption:"역할에 맞는 물건을 고르고, 주요 물건은 복수 확보합니다.",
+            img:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leftovers.png",
+            bullets:[
+              "스위퍼: 기합의띠, 생명의구슬, 구애머리띠/구애안경/구애스카프.",
+              "탱커: 먹다남은음식, 돌격조끼, 방어형 열매 계열.",
+              "서포터: 빛의점토, 탈출버튼, 미러허브 등 전개형 아이템.",
+              "핵심 물건은 딜리버드 포장점에서 다수 구매 가능하니 예비분을 미리 챙겨 두세요.",
+              "아래 표는 현재 데이터에 있는 지닌물건 전체 효과 사전입니다."
+            ],
+            note:"실전에서는 아이템 정보전이 중요하므로, 파티별 아이템 중복과 카운터 상성을 같이 점검하세요."
+          },
+          {
+            key:"b8",
+            title:"8) 최종 체크",
+            caption:"실전 투입 전 마지막 검수 단계입니다.",
+            img:"./assets/icons/pokeball.svg",
+            bullets:[
+              "기술 4칸, 노력치, 개체값, 특성, 성격, 테라타입, 지닌물건을 최종 확인합니다.",
+              "실전 데미지 계산 기준으로 최소 확정 라인을 다시 점검합니다.",
+              "친선전/테스트 배틀 3~5판으로 실제 체감 화력과 내구를 검증합니다.",
+              "필요 시 EV 4~20 범위를 미세 조정해 확정 타이밍을 맞춥니다.",
+              "팀 단위로 선출 플랜(리드/마무리/대응 루트)까지 적어두면 실전 승률이 안정됩니다."
+            ],
+            note:"한 판 이기기보다 여러 판에서 같은 판단이 나오는 구조를 만드는 것이 실전 완성입니다."
+          }
+        ];
+        const page = pages.find(p=>p.key===battleScope) || pages[0];
+        const idx = pages.indexOf(page);
+        const cap = page.caption ? "<span class='line guide-cap'>"+esc(page.caption)+"</span>" : "";
+        const head = "<div class='guide-head'><img class='guide-thumb' src='"+esc(page.img)+"' alt='가이드 이미지' onerror=\"this.onerror=null;this.src='"+esc(imgFallback)+"';\"><div><h3>"+esc(page.title)+"</h3>"+cap+"</div></div>";
+        const listHtml = "<ul class='guide-list'>" + (page.bullets||[]).map(x=>"<li>"+paint(x)+"</li>").join("") + "</ul>";
+        const noteHtml = page.note ? "<div class='guide-note'><strong>운영 팁</strong><span class='line'>"+paint(page.note)+"</span></div>" : "";
+        let extraHtml = "";
+        if(page.key==="b5"){
+          const evRows = [
+            { stat:"HP", mon:"맛보돈", area:"포코 패스 / 남부 1구역", item:"파워웨이트", base:1 },
+            { stat:"공격", mon:"망키", area:"서부 1구역 / 남부 5구역", item:"파워리스트", base:1 },
+            { stat:"방어", mon:"타랜툴라", area:"남부 1구역 / 포코 패스", item:"파워벨트", base:1 },
+            { stat:"특수공격", mon:"고라파덕", area:"남부 1구역(강변) / 남부 2구역(강변)", item:"파워렌즈", base:1 },
+            { stat:"특수방어", mon:"슬리프", area:"남부 2구역(폐허) / 남부 3구역(유적)", item:"파워밴드", base:1 },
+            { stat:"스피드", mon:"화살꼬빈", area:"남부 2구역 / 포코 패스", item:"파워앵클릿", base:1 }
+          ];
+          const rows = evRows.map(r=>{
+            const withItem = Number(r.base) + 8;
+            return "<tr><td>"+esc(r.stat)+"</td><td>"+esc(r.mon)+"</td><td>"+esc(r.area)+"</td><td>"+esc(String(r.base))+"</td><td>"+esc(String(withItem))+"</td><td>"+esc(r.item)+"</td></tr>";
+          }).join("");
+          extraHtml = "<section class='box'><h3>노력치 파밍 예시 (1마리당 획득량)</h3><table><thead><tr><th>목표 노력치</th><th>추천 포켓몬</th><th>주요 지역</th><th>지닌도구 없음 (상승 EV)</th><th>지닌도구 있음 (상승 EV)</th><th>지녀야 하는 도구</th></tr></thead><tbody>"+rows+"</tbody></table><span class='line'>※ 본 표는 기본 지급량이 1인 포켓몬 기준입니다. 파워아이템 착용 시 해당 능력치 EV는 +8이 추가됩니다.</span><span class='line'>※ 예: 기본 1 EV 포켓몬 처치 시, 도구 없음 1 / 파워아이템 착용 9.</span></section>";
+        }else if(page.key==="b7"){
+          const heldAll = sortHeldByCategory(tools.held||[]);
+          const heldRows = heldAll.map(it=>{
+            const ico = toolIconSrc(it);
+            return "<tr><td>"+esc(heldCategory(it))+"</td><td><img class='ic' src='"+esc(ico)+"' alt='아이콘' onerror=\"this.onerror=null;this.src='"+esc(imgFallback)+"';\"></td><td>"+esc(it.kr||"-")+"</td><td>"+esc(it.effect||"효과 정보 없음")+"</td></tr>";
+          }).join("");
+          extraHtml = "<section class='box'><h3>지닌물건 전체 효과 사전</h3><div class='scroll' style='max-height:460px;'><table class='held-ref'><thead><tr><th>분류</th><th>아이콘</th><th>물건명</th><th>효과</th></tr></thead><tbody>"+heldRows+"</tbody></table></div><span class='line'>※ 효과 설명은 현재 데이터 기준 전체 지닌물건을 모두 표시합니다.</span></section>";
+        }
+        gridEl.innerHTML = "<h3 style='margin:0 0 8px;font-size:16px;color:#394639;font-weight:800;'>실전 포켓몬 제작 공략</h3><div class='pane-grid'><section class='box guide-step'>"+head+listHtml+noteHtml+"</section>"+extraHtml+"</div>";
+        countEl.textContent = "실전 페이지: " + (idx+1) + " / " + pages.length;
+        footEl.textContent = "좌측 하위 카테고리(1~8)로 단계별 페이지를 이동하세요.";
+      }
       function setPane(name){
         activePane=name;
         dTabs.forEach(t=>t.classList.toggle("on",t.dataset.pane===name));
         paneStats.classList.toggle("on",name==="stats");
         paneLocation.classList.toggle("on",name==="location");
         paneMoves.classList.toggle("on",name==="moves");
+        paneEggMoves.classList.toggle("on",name==="egg-moves");
       }
 
       function rowsMove(arr,key,empty){
         if(!arr||!arr.length) return "<tr><td colspan='6'>"+esc(empty)+"</td></tr>";
         return arr.map(r=>"<tr><td>"+esc(r[key]==null?'-':r[key])+"</td><td>"+esc(r.kr||'')+"</td><td>"+esc(((chart.typeInfo||{})[r.type]||{}).ko||r.type||'-')+"</td><td>"+esc(r.category||'-')+"</td><td>"+esc(r.power==null?'-':r.power)+"</td><td>"+esc(r.accuracy==null?'-':r.accuracy)+"</td></tr>").join("");
       }
-
+      function rowsEggMove(arr,empty){
+        if(!arr||!arr.length) return "<tr><td colspan='6'>"+esc(empty)+"</td></tr>";
+        return arr.map(r=>{
+          if(typeof r==="string"){
+            return "<tr><td>"+esc(r)+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td class='egg-parents'>-</td></tr>";
+          }
+          const breedParents = Array.isArray(r.breedParents) ? r.breedParents : (Array.isArray(r.parents) ? r.parents : []);
+          const breedTotal = Number.isFinite(Number(r.breedParentTotal)) ? Number(r.breedParentTotal) : (Number.isFinite(Number(r.parentTotal)) ? Number(r.parentTotal) : breedParents.length);
+          const mirrorDonors = Array.isArray(r.mirrorDonors) ? r.mirrorDonors : [];
+          const mirrorTotal = Number.isFinite(Number(r.mirrorDonorTotal)) ? Number(r.mirrorDonorTotal) : mirrorDonors.length;
+          const breedText = !breedParents.length && !breedTotal
+            ? "교배: 해당 없음"
+            : ("교배: " + breedParents.join(", ") + (breedTotal > breedParents.length ? (" 외 " + (breedTotal - breedParents.length) + "마리") : ""));
+          const mirrorText = !mirrorDonors.length && !mirrorTotal
+            ? "미러허브: 해당 없음"
+            : ("미러허브: " + mirrorDonors.join(", ") + (mirrorTotal > mirrorDonors.length ? (" 외 " + (mirrorTotal - mirrorDonors.length) + "마리") : ""));
+          const parentHtml = "<span class='line'>"+esc(breedText)+"</span><span class='line'>"+esc(mirrorText)+"</span>";
+          return "<tr><td>"+esc(r.kr||r.name||'')+"</td><td>"+esc(((chart.typeInfo||{})[r.type]||{}).ko||r.type||'-')+"</td><td>"+esc(r.category||'-')+"</td><td>"+esc(r.power==null?'-':r.power)+"</td><td>"+esc(r.accuracy==null?'-':r.accuracy)+"</td><td class='egg-parents'>"+parentHtml+"</td></tr>";
+        }).join("");
+      }
       function abilityRow(label, name){
         if(!name) return "";
         const desc = abilityData[name] || "특성 설명 정보가 없습니다.";
         return "<span class='line'><strong>"+esc(label)+": "+esc(name)+"</strong></span><span class='line'>설명: "+esc(desc)+"</span>";
       }
-
       function detailPokemon(e){
         const stats = e.baseStats || {};
         const types = (e.types||[]).map(typeChip).join("") || "<span class='line'>타입 정보 없음</span>";
         const abilities = (e.abilities||[]).map(a=>abilityRow("일반 특성", a)).join("") + abilityRow("숨겨진 특성", e.hiddenAbility);
         const sRows = ["hp","attack","defense","special-attack","special-defense","speed"].map(k=>"<tr><th>"+esc(statKo[k])+"</th><td>"+esc(stats[k]||0)+"</td></tr>").join("");
         paneStats.innerHTML = "<div class='pane-grid'><section class='box'><h3>기본 정보</h3><div class='types'>"+types+"</div>"+(abilities||"<span class='line'>특성 정보 없음</span>")+"</section><section class='box'><h3>종족값</h3><table><thead><tr><th>항목</th><th>수치</th></tr></thead><tbody>"+sRows+"<tr class='total'><th>합계</th><td>"+esc(stats.total||0)+"</td></tr></tbody></table></section></div>";
+
         const sLines = toLines(e.scarlet).concat(captureExtra(e.scarlet));
         const vLines = toLines(e.violet).concat(captureExtra(e.violet));
         const sList = sLines.length ? "<ul class='loc-list'>"+sLines.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>" : "<span class='line'>정보 없음</span>";
         const vList = vLines.length ? "<ul class='loc-list'>"+vLines.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>" : "<span class='line'>정보 없음</span>";
         renderLocationPane(sList, vList, makeEvoList(fetchEvolutionLines(e)));
-        const m = moves[String(e.nationalNo)] || {levelUp:[],tm:[]};
-        paneMoves.innerHTML="<div class='pane-grid'><section class='box'><h3>레벨업 기술</h3><table><thead><tr><th>레벨</th><th>기술</th><th>타입</th><th>분류</th><th>위력</th><th>명중</th></tr></thead><tbody>"+rowsMove(m.levelUp,'level','레벨업 기술이 없습니다.')+"</tbody></table></section><section class='box'><h3>기술머신 기술</h3><table><thead><tr><th>TM</th><th>기술</th><th>타입</th><th>분류</th><th>위력</th><th>명중</th></tr></thead><tbody>"+rowsMove(m.tm,'code','기술머신 기술이 없습니다.')+"</tbody></table></section></div>";
-      }
 
+        const m = moves[String(e.nationalNo)] || {levelUp:[],tm:[]};
+        paneMoves.innerHTML = "<div class='pane-grid'><section class='box'><h3>레벨업 기술</h3><table><thead><tr><th>레벨</th><th>기술</th><th>타입</th><th>분류</th><th>위력</th><th>명중</th></tr></thead><tbody>"+rowsMove(m.levelUp,'level','레벨업 기술이 없습니다.')+"</tbody></table></section><section class='box'><h3>기술머신 기술</h3><table><thead><tr><th>TM</th><th>기술</th><th>타입</th><th>분류</th><th>위력</th><th>명중</th></tr></thead><tbody>"+rowsMove(m.tm,'code','기술머신 기술이 없습니다.')+"</tbody></table></section></div>";
+
+        const eggMoves = Array.isArray(m.eggMoves) ? m.eggMoves : (Array.isArray(m.egg) ? m.egg : (Array.isArray(m.breed) ? m.breed : []));
+        paneEggMoves.innerHTML = "<div class='pane-grid'><section class='box'><h3>교배로 배우는 기술</h3><table><thead><tr><th>기술</th><th>타입</th><th>분류</th><th>위력</th><th>명중</th><th>부모 정보</th></tr></thead><tbody>"+rowsEggMove(eggMoves,'교배로 배우는 기술이 없습니다.')+"</tbody></table><span class='line'>※ 교배: 같은 알그룹의 부모 포켓몬이 기술을 보유해야 유전됩니다.</span><span class='line'>※ 미러허브: 빈 기술칸이 있는 상태로 피크닉을 열면 전달이 가능합니다.</span></section></div>";
+      }
       function detailTool(e){
         dTabsEl.style.display="none";
         const s = split((e.scarlet||[]).join ? e.scarlet.join(", ") : (e.scarlet||e.effect||"정보 없음"));
         const v = split((e.violet||[]).join ? e.violet.join(", ") : (e.violet||e.effect||"정보 없음"));
-        paneStats.classList.remove("on"); paneMoves.classList.remove("on"); paneLocation.classList.add("on");
-        paneLocation.innerHTML="<div class='pane-grid'><section class='box'><h3>설명</h3><span class='line'>"+esc(e.effect||"설명 없음")+"</span></section><section class='box scar'><h3>스칼렛 입수</h3>"+s.map(x=>"<span class='line'>"+esc(x)+"</span>").join("")+"</section><section class='box vio'><h3>바이올렛 입수</h3>"+v.map(x=>"<span class='line'>"+esc(x)+"</span>").join("")+"</section></div>";
+        paneStats.classList.remove("on"); paneMoves.classList.remove("on"); paneEggMoves.classList.remove("on"); paneLocation.classList.add("on");
+        paneLocation.innerHTML = "<div class='pane-grid'><section class='box'><h3>설명</h3><span class='line'>"+esc(e.effect||"설명 없음")+"</span></section><section class='box scar'><h3>스칼렛 입수</h3>"+s.map(x=>"<span class='line'>"+esc(x)+"</span>").join("")+"</section><section class='box vio'><h3>바이올렛 입수</h3>"+v.map(x=>"<span class='line'>"+esc(x)+"</span>").join("")+"</section></div>";
       }
-
       function open(no){
         const e = list().find(x=>Number(x.no)===Number(no));
         if(!e) return;
@@ -647,16 +979,18 @@
       function close(){ overlay.classList.remove("open"); overlay.setAttribute("aria-hidden","true"); }
 
       function render(){
-        header(); syncTabs(); syncCtrl();
+        header(); syncTabs(); syncCtrl(); syncTheme();
         if(category==="nature"){ renderNature(); return; }
         if(category==="type-chart"){ renderType(); return; }
         if(category==="map"){ renderMap(); return; }
+        if(category==="battle"){ renderBattleGuide(); return; }
         renderCards();
       }
 
       books.forEach(b=>b.addEventListener("click",function(){ category=this.dataset.cat; books.forEach(x=>x.classList.toggle("on",x===this)); query=""; searchEl.value=""; render(); }));
       pSubs.forEach(s=>s.addEventListener("click",function(){ dexScope=this.dataset.dex||"paldea"; category="pokemon"; books.forEach(x=>x.classList.toggle("on",x.dataset.cat==="pokemon")); query=""; searchEl.value=""; render(); }));
       tSubs.forEach(s=>s.addEventListener("click",function(){ toolScope=this.dataset.tool||"held"; category="tools"; books.forEach(x=>x.classList.toggle("on",x.dataset.cat==="tools")); query=""; searchEl.value=""; render(); }));
+      bSubs.forEach(s=>s.addEventListener("click",function(){ battleScope=this.dataset.battle||"b1"; category="battle"; books.forEach(x=>x.classList.toggle("on",x.dataset.cat==="battle")); query=""; searchEl.value=""; render(); }));
       searchEl.addEventListener("input",function(){ query=this.value||""; render(); });
       gridEl.addEventListener("click",e=>{ const c=e.target.closest(".card"); if(c) open(c.dataset.no); });
       dTabs.forEach(t=>t.addEventListener("click",function(){ setPane(this.dataset.pane||"stats"); }));
@@ -668,3 +1002,10 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
