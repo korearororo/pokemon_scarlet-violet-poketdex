@@ -9,22 +9,22 @@
     @font-face { font-family:"Press Start 2P"; src:url("./assets/fonts/PressStart2P-Regular.ttf") format("truetype"); }
     @font-face { font-family:"Gowun Dodum"; src:url("./assets/fonts/GowunDodum-Regular.ttf") format("truetype"); }
     :root{ --scarlet:#e97e2e; --violet:#7a4dc3; --border:#2f1d13; --bg:#fff8ee; --ink:#222; --muted:#566; }
-    *{box-sizing:border-box} body{margin:0;padding:12px;font-family:"Gowun Dodum",sans-serif;background:linear-gradient(120deg,#ffe7cc,#f2dbff);color:var(--ink)}
-    .app{max-width:1280px;margin:0 auto;display:flex;gap:0;align-items:flex-start}
+    *{box-sizing:border-box} body{margin:0;padding:12px;height:100dvh;overflow:hidden;font-family:"Gowun Dodum",sans-serif;background:linear-gradient(120deg,#ffe7cc,#f2dbff);color:var(--ink)}
+    .app{width:100%;max-width:1280px;height:calc(100dvh - 24px);margin:0 auto;display:flex;gap:0;align-items:flex-start}
     .rail{width:116px;flex:0 0 116px;margin-top:72px;margin-right:-12px;z-index:2}
     .book{display:block;width:100%;padding:10px 9px;border:2px solid #76401d;border-right:0;background:#f2c39f;border-radius:10px 0 0 10px;font-weight:700;text-align:left;margin-bottom:7px;cursor:pointer}
     .book.on{background:linear-gradient(90deg,#ef8a3f,#c95b1c);color:#fff}
     .subs{display:flex;flex-direction:column;gap:5px;padding-left:6px;margin-bottom:8px}
     .sub{border:2px solid #8f6c38;background:#fff4df;border-radius:999px;padding:6px 7px;font-size:12px;font-weight:700;cursor:pointer}
     .sub.on{background:#ffd978;border-color:#a87511}
-    .panel{flex:1;background:linear-gradient(180deg,#f5954e,var(--scarlet));border:4px solid var(--border);border-radius:16px;box-shadow:0 12px 0 #a24d1f,0 24px 30px rgba(0,0,0,.24)}
+    .panel{flex:1;height:100%;min-height:0;display:flex;flex-direction:column;background:linear-gradient(180deg,#f5954e,var(--scarlet));border:4px solid var(--border);border-radius:16px;box-shadow:0 12px 0 #a24d1f,0 24px 30px rgba(0,0,0,.24)}
     .top{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:4px solid var(--border);background:linear-gradient(90deg,#ffc58d,#f08334)}
     .title{font-family:"Press Start 2P",monospace;color:#fff;font-size:12px;line-height:1.5;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
-    .screen{margin:12px;border:4px solid var(--border);border-radius:12px;background:var(--bg);padding:10px}
-    .controls{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+    .screen{margin:8px;flex:1;min-height:0;display:flex;flex-direction:column;border:4px solid var(--border);border-radius:12px;background:var(--bg);padding:8px;overflow:hidden}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:10px;position:sticky;top:0;z-index:7;background:var(--bg);padding-bottom:4px}
     .search{flex:1;height:36px;border:2px solid #8d6a2f;border-radius:9px;padding:0 10px;background:#fff}
     .count{font-size:13px;font-weight:700;color:#5b4528;white-space:nowrap}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px;flex:1;min-height:0;overflow:auto;align-content:start;padding-right:0}
     .card{position:relative;border:2px solid #8b6733;background:#fff;border-radius:10px;padding:8px;min-height:160px;text-align:center;cursor:pointer}
     .card:hover{transform:translateY(-1px)}
     .card.unob{background:#eceff2;border-color:#999fa7;color:#60656d}
@@ -32,8 +32,8 @@
     .no{font-size:12px;color:#765f35;font-weight:700}
     .name{font-size:15px;font-weight:700;line-height:1.2;margin-top:4px;word-break:keep-all}
     .type-stack{position:absolute;top:6px;left:6px;display:flex;flex-direction:column;gap:4px;z-index:1}
-    .type-badge{width:20px;height:20px;border-radius:50%;border:1px solid rgba(0,0,0,.38);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,.25)}
-    .type-badge img{width:12px;height:12px;object-fit:contain}
+    .type-badge{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,.38);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+    .type-badge img{width:9px;height:9px;object-fit:contain}
     .dot{position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
     .dot.s{background:var(--scarlet)} .dot.v{background:var(--violet)}
     .foot{padding:0 14px 12px;color:var(--muted);font-size:13px;min-height:18px}
@@ -82,30 +82,55 @@
     .e2{background:#ffd9d9;color:#b13030;font-weight:800}.e5{background:#d7ebff;color:#2f669f;font-weight:800}
     .e0{background:#ededed;color:#666;font-weight:800}.e1{background:#f8f8f8;color:#555}
     .map{border:2px solid #8a92a9;border-radius:12px;position:relative;width:min(100%,760px);aspect-ratio:1/1;margin:0 auto 10px;background:linear-gradient(180deg,rgba(25,33,58,.10),rgba(16,22,41,.22)),url("./assets/maps/PaldeaMap.jpg"),linear-gradient(120deg,#9ec8f8,#88baf1);background-size:contain,contain,cover;background-repeat:no-repeat;background-position:center,center,center}
-    .mk{position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+    .mk{position:absolute;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
     .mk.g{background:#e2802f}.mk.s{background:#7a50c5}.mk.t{background:#2f9d68}.mk.f{background:#6f5ea8}
-    .mk-face{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 2px 9px rgba(0,0,0,.45);background:#f4f7ff;z-index:4}
+    .mk-face{position:absolute;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 2px 9px rgba(0,0,0,.45);background:#f4f7ff;z-index:4}
     .mk-face.g{border-color:#b9590e;box-shadow:0 0 0 2px rgba(185,89,14,.65),0 2px 9px rgba(0,0,0,.45)}
     .mk-face.s{border-color:#5f37a6;box-shadow:0 0 0 2px rgba(95,55,166,.65),0 2px 9px rgba(0,0,0,.45)}
     .mk-face.t{border-color:#1f7d4f;box-shadow:0 0 0 2px rgba(31,125,79,.65),0 2px 9px rgba(0,0,0,.45)}
     .mk-face.f{border-color:#4d3b87;box-shadow:0 0 0 2px rgba(77,59,135,.65),0 2px 9px rgba(0,0,0,.45)}
     .mk-face img{width:100%;height:100%;object-fit:cover}
     .mk-face.icon img{object-fit:contain;padding:3px;background:#fff}
-    .mk-label{position:absolute;transform:translate(10px,-22px);font-size:11px;font-weight:800;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.35);border-radius:999px;padding:1px 6px;z-index:6}
+    .mk-label{position:absolute;transform:translate(10px,-20px);font-size:11px;font-weight:800;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.35);border-radius:999px;padding:1px 6px;z-index:6}
     .map-tip-float{position:fixed;left:0;top:0;z-index:9999;max-width:360px;padding:9px 11px;border:2px solid rgba(0,0,0,.35);border-radius:10px;background:rgba(255,255,255,.97);box-shadow:0 8px 24px rgba(0,0,0,.2);font-size:12px;color:#2b3440;pointer-events:none;display:none;font-weight:700}
     .map-tip-float.g{border-color:#b9590e;background:linear-gradient(180deg,#fff6ea,#fff)}
     .map-tip-float.s{border-color:#5f37a6;background:linear-gradient(180deg,#f4efff,#fff)}
     .map-tip-float.t{border-color:#1f7d4f;background:linear-gradient(180deg,#ebfff4,#fff)}
     .map-tip-float.f{border-color:#4d3b87;background:linear-gradient(180deg,#f0edff,#fff)}
     .map-tip-float.p{border-color:#c62828;background:linear-gradient(180deg,#fff1f1,#fff)}
-    .pc-mk{position:absolute;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;border:2px solid #c62828;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;z-index:3}
-    .pc-mk img{width:12px;height:12px;object-fit:contain}
+    .pc-mk{position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;border:2px solid #c62828;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;z-index:3}
+    .pc-mk img{width:11px;height:11px;object-fit:contain}
+    .map-wrap{position:sticky;top:0;z-index:2;background:#fff;max-height:72dvh;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+    .routes-scroll{max-height:320px;overflow:auto;padding-right:0}
     .routes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
     .rc{border:1px solid #97a2ae;border-radius:8px;padding:7px;background:rgba(255,255,255,.88);font-size:12px;line-height:1.35}
     .bdg{display:inline-block;color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 7px;margin-right:4px}
     .bdg.g{background:#d96d20}.bdg.s{background:#6c46b5}.bdg.t{background:#238554}.bdg.f{background:#5a488f}
-    @media (max-width:1080px){ .app{flex-direction:column-reverse}.rail{width:100%;margin:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}.book{border-right:2px solid #76401d;border-radius:10px;text-align:center}.subs{grid-column:span 2;flex-direction:row;flex-wrap:wrap;padding-left:0} }
-    @media (max-width:740px){ .meta-name{font-size:24px}.dtop img{width:92px;height:92px}.grid{grid-template-columns:repeat(auto-fill,minmax(118px,1fr))}.card{min-height:150px}.card img{width:68px;height:68px}.name{font-size:14px}.map{width:100%} }
+    @media (max-width:1080px){
+      .app{flex-direction:column;align-items:stretch}
+      .panel{width:100%}
+      .rail{width:100%;flex:0 0 auto;margin:0 0 8px 0;display:flex;flex-wrap:wrap;gap:6px}
+      .book{flex:1 1 calc(25% - 6px);min-width:82px;border-right:2px solid #76401d;border-radius:10px;text-align:center;margin-bottom:0}
+      .subs{width:100%;flex-direction:row;flex-wrap:wrap;padding-left:0;gap:6px;margin-bottom:2px}
+      .sub{flex:1 1 auto}
+    }
+    @media (max-width:740px){
+      body{padding:8px 0}
+      .app{height:calc(100dvh - 16px)}
+      .meta-name{font-size:24px}
+      .dtop img{width:92px;height:92px}
+      .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+      .card{min-height:118px;padding:5px}
+      .card img{width:44px;height:44px}
+      .no{font-size:10px}
+      .name{font-size:12px;line-height:1.15}
+      .type-stack{top:4px;left:4px;gap:3px}
+      .type-badge{width:12px;height:12px}
+      .type-badge img{width:7px;height:7px}
+      .map{width:100%}
+      .map-wrap{max-height:56dvh}
+      .routes-scroll{max-height:220px;padding-right:0}
+    }
   </style>
 </head>
 <body>
@@ -184,6 +209,7 @@
       const evoData = window.SV_EVOLUTION_DATA || {};
       const icons = window.FRLG_TYPE_ICON_DATA || {};
       const fallbackItemIcon = "./assets/icons/items/key-item-ingame.png";
+      const fallbackSpriteIcon = "./assets/icons/pokeball.svg";
 
       const statKo = {"hp":"HP","attack":"공격","defense":"방어","special-attack":"특수공격","special-defense":"특수방어","speed":"스피드"};
       const typeColor = {normal:"#9a9a9a",fire:"#f57d31",water:"#4f8de3",electric:"#f7c531",grass:"#67b93c",ice:"#78d5d6",fighting:"#ce416b",poison:"#ab6ac8",ground:"#d6b55d",flying:"#8fa9de",psychic:"#ef5f8d",bug:"#91c12f",rock:"#c5b78c",ghost:"#6f5bc2",dragon:"#136dc4",dark:"#5a5465",steel:"#5f8ea2",fairy:"#ec8fe6"};
@@ -362,7 +388,7 @@
         const info = (chart.typeInfo || {})[key] || {ko:key};
         const c = typeColor[key] || "#888";
         const ic = icons[key] || "";
-        return "<span class='chip'><span class='ball' style='background:"+esc(c)+";'>" + (ic ? "<img src='"+esc(ic)+"' alt='타입'>" : "") + "</span><span>"+esc(info.ko)+"</span></span>";
+        return "<span class='chip'><span class='ball' style='background:"+esc(c)+";'>" + (ic ? "<img src='"+esc(ic)+"' alt='타입' onerror=\"this.onerror=null;this.remove();\">" : "") + "</span><span>"+esc(info.ko)+"</span></span>";
       }
 
       function list(){
@@ -412,11 +438,11 @@
               const typeKo = ((chart.typeInfo || {})[t] || {}).ko || t || "타입 없음";
               const typeIcon = icons[t] || "";
               const typeBg = typeColor[t] || "#7a7a7a";
-              return typeIcon ? "<span class='type-badge' title='"+esc(typeKo)+"' style='background:"+esc(typeBg)+";'><img src='"+esc(typeIcon)+"' alt='타입'></span>" : "";
+              return typeIcon ? "<span class='type-badge' title='"+esc(typeKo)+"' style='background:"+esc(typeBg)+";'><img src='"+esc(typeIcon)+"' alt='타입' onerror=\"this.onerror=null;this.remove();\"></span>" : "";
             }).join("");
             const typeStack = typeBadges ? "<span class='type-stack'>"+typeBadges+"</span>" : "";
             const cls = "card" + ((dexScope==="national" && !e.obtainable) ? " unob" : "");
-            return "<button class='"+cls+"' data-no='"+esc(e.no)+"' type='button'>"+typeStack+dot+"<img loading='lazy' src='"+esc(img(e.nationalNo))+"' alt='포켓몬'><div class='no'>#"+esc(String(e.no).padStart(3,"0"))+"</div><div class='name'>"+esc(e.kr)+"</div></button>";
+            return "<button class='"+cls+"' data-no='"+esc(e.no)+"' type='button'>"+typeStack+dot+"<img loading='lazy' src='"+esc(img(e.nationalNo))+"' alt='포켓몬' onerror=\"this.onerror=null;this.src='"+esc(fallbackSpriteIcon)+"';\"><div class='no'>#"+esc(String(e.no).padStart(3,"0"))+"</div><div class='name'>"+esc(e.kr)+"</div></button>";
           }
           if(toolScope==="tm"){
             return "<button class='card' data-no='"+esc(e.no)+"' type='button'><img loading='lazy' src='./assets/icons/items/tm-ingame.png' alt='TM'><div class='no'>"+esc(e.code||"TM")+"</div><div class='name'>"+esc(e.kr)+"</div></button>";
@@ -452,7 +478,7 @@
           const icon = icons[k] || "";
           const c = typeColor[k] || "#7a7a7a";
           if(!icon) return esc(ko);
-          return "<span class='type-ico'><span class='type-ico-ball' style='background:"+esc(c)+";'><img src='"+esc(icon)+"' alt='타입'></span><span>"+esc(ko)+"</span></span>";
+          return "<span class='type-ico'><span class='type-ico-ball' style='background:"+esc(c)+";'><img src='"+esc(icon)+"' alt='타입' onerror=\"this.onerror=null;this.remove();\"></span><span>"+esc(ko)+"</span></span>";
         };
         const head=order.map((d,di)=>"<th data-col='"+di+"' title='"+esc(typeLabel(d))+"'>"+typeHead(d)+"</th>").join("");
         const rows=order.map(a=>{
@@ -498,14 +524,14 @@
           const src = r.k==='gym' && r.badge ? r.badge : (r.k==='star' ? starIcon : faceImg(r.faceNo || 25));
           const faceClass = "mk-face "+kindClass(r.k)+((r.k==='gym' || r.k==='star') ? " icon" : "");
           const tip = esc(tipText(r));
-          const face = "<span class='"+faceClass+" map-hover' data-tip='"+tip+"' data-tip-kind='"+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'><img src='"+esc(src)+"' alt='face'></span>";
+          const face = "<span class='"+faceClass+" map-hover' data-tip='"+tip+"' data-tip-kind='"+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'><img src='"+esc(src)+"' alt='face' onerror=\"this.onerror=null;this.src='"+esc(fallbackSpriteIcon)+"';\"></span>";
           const dot = "<span class='mk "+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'></span>";
           const label = "<span class='mk-label map-hover' data-tip='"+tip+"' data-tip-kind='"+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'>"+esc(r.o)+"</span>";
           return face + dot + label;
         }).join("");
         const centerMarks = centers.map(c=>{
           const tip = esc("포켓몬센터 | " + c.n);
-          return "<span class='pc-mk map-hover' data-tip-kind='p' data-tip='"+tip+"' style='left:"+c.x+"%;top:"+c.y+"%;'><img src='"+esc(centerIcon)+"' alt='center'></span>";
+          return "<span class='pc-mk map-hover' data-tip-kind='p' data-tip='"+tip+"' style='left:"+c.x+"%;top:"+c.y+"%;'><img src='"+esc(centerIcon)+"' alt='center' onerror=\"this.onerror=null;this.src='"+esc(fallbackSpriteIcon)+"';\"></span>";
         }).join("");
         const cards = routes.map(r=>{
           const tag = r.k==='gym' ? '체육관' : (r.k==='star' ? '스타단' : (r.k==='titan' ? '주인' : '최종전'));
@@ -513,7 +539,7 @@
           return "<div class='rc'><span class='bdg "+kindClass(r.k)+"'>"+tag+"</span><strong>"+esc(r.o+". "+r.n)+"</strong><br>권장 레벨: "+esc(r.lv)+extra+"</div>";
         }).join("");
         gridEl.className="wrap";
-        gridEl.innerHTML="<h3 style='margin:0 0 8px;font-size:16px;color:#394639;font-weight:800;'>팔데아 지방 지도 + 추천 공략 순서</h3><div class='map'>"+centerMarks+marks+"</div><div class='routes'>"+cards+"</div>";
+        gridEl.innerHTML="<h3 style='margin:0 0 8px;font-size:16px;color:#394639;font-weight:800;'>팔데아 지방 지도 + 추천 공략 순서</h3><div class='map-wrap'><div class='map'>"+centerMarks+marks+"</div></div><div class='routes-scroll'><div class='routes'>"+cards+"</div></div>";
         countEl.textContent = "메인 공략 단계: " + routes.length;
         footEl.textContent = "체육관 · 스타단 · 주인 · 최종전 권장 순서를 지도에 표시했습니다.";
         let tipEl = document.getElementById("map-tip-float");
@@ -599,6 +625,7 @@
         dName.textContent = e.kr || "";
         dNo.textContent = category==="pokemon" ? ("No."+String(e.no).padStart(3,"0")) : (toolScope==="tm" ? (e.code||"TM") : ("ITEM "+String(e.no).padStart(3,"0")));
         if(category==="pokemon"){
+          dImg.onerror = () => { dImg.onerror = null; dImg.src = fallbackSpriteIcon; };
           dImg.src = img(e.nationalNo);
           dTabsEl.style.display="flex";
           detailPokemon(e);

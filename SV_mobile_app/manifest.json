@@ -1,0 +1,28 @@
+{
+  "name": "SV 공략집",
+  "short_name": "SV공략집",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7a50c5",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "./assets/icons/app-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/icons/app-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/icons/app-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

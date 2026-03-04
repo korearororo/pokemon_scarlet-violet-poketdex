@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#7a50c5">
+  <title>SV 공략집</title>
+  <link rel="manifest" href="./manifest.json">
+</head>
+<body>
+  <noscript>이 앱은 JavaScript가 필요합니다.</noscript>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(function () {});
+    }
+    location.replace("./SV_files/SV_%EA%B3%B5%EB%9E%B5%EC%A7%91.html");
+  </script>
+</body>
+</html>

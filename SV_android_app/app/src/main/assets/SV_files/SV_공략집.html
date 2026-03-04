@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>포켓몬스터 스칼렛/바이올렛 공략</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/icons/pokeball.svg">
+  <style>
+    @font-face { font-family:"Press Start 2P"; src:url("./assets/fonts/PressStart2P-Regular.ttf") format("truetype"); }
+    @font-face { font-family:"Gowun Dodum"; src:url("./assets/fonts/GowunDodum-Regular.ttf") format("truetype"); }
+    :root{ --scarlet:#e97e2e; --violet:#7a4dc3; --border:#2f1d13; --bg:#fff8ee; --ink:#222; --muted:#566; }
+    *{box-sizing:border-box} body{margin:0;padding:12px;height:100dvh;overflow:hidden;font-family:"Gowun Dodum",sans-serif;background:linear-gradient(120deg,#ffe7cc,#f2dbff);color:var(--ink)}
+    .app{width:100%;max-width:1280px;height:calc(100dvh - 24px);margin:0 auto;display:flex;gap:0;align-items:flex-start}
+    .rail{width:116px;flex:0 0 116px;margin-top:72px;margin-right:-12px;z-index:2}
+    .book{display:block;width:100%;padding:10px 9px;border:2px solid #76401d;border-right:0;background:#f2c39f;border-radius:10px 0 0 10px;font-weight:700;text-align:left;margin-bottom:7px;cursor:pointer}
+    .book.on{background:linear-gradient(90deg,#ef8a3f,#c95b1c);color:#fff}
+    .subs{display:flex;flex-direction:column;gap:5px;padding-left:6px;margin-bottom:8px}
+    .sub{border:2px solid #8f6c38;background:#fff4df;border-radius:999px;padding:6px 7px;font-size:12px;font-weight:700;cursor:pointer}
+    .sub.on{background:#ffd978;border-color:#a87511}
+    .panel{flex:1;height:100%;min-height:0;display:flex;flex-direction:column;background:linear-gradient(180deg,#f5954e,var(--scarlet));border:4px solid var(--border);border-radius:16px;box-shadow:0 12px 0 #a24d1f,0 24px 30px rgba(0,0,0,.24)}
+    .top{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:4px solid var(--border);background:linear-gradient(90deg,#ffc58d,#f08334)}
+    .title{font-family:"Press Start 2P",monospace;color:#fff;font-size:12px;line-height:1.5;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
+    .screen{margin:8px;flex:1;min-height:0;display:flex;flex-direction:column;border:4px solid var(--border);border-radius:12px;background:var(--bg);padding:8px;overflow:hidden}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:10px;position:sticky;top:0;z-index:7;background:var(--bg);padding-bottom:4px}
+    .search{flex:1;height:36px;border:2px solid #8d6a2f;border-radius:9px;padding:0 10px;background:#fff}
+    .count{font-size:13px;font-weight:700;color:#5b4528;white-space:nowrap}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px;flex:1;min-height:0;overflow:auto;align-content:start;padding-right:0}
+    .card{position:relative;border:2px solid #8b6733;background:#fff;border-radius:10px;padding:8px;min-height:160px;text-align:center;cursor:pointer}
+    .card:hover{transform:translateY(-1px)}
+    .card.unob{background:#eceff2;border-color:#999fa7;color:#60656d}
+    .card img{width:76px;height:76px;object-fit:contain}
+    .no{font-size:12px;color:#765f35;font-weight:700}
+    .name{font-size:15px;font-weight:700;line-height:1.2;margin-top:4px;word-break:keep-all}
+    .type-stack{position:absolute;top:6px;left:6px;display:flex;flex-direction:column;gap:4px;z-index:1}
+    .type-badge{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,.38);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+    .type-badge img{width:9px;height:9px;object-fit:contain}
+    .dot{position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+    .dot.s{background:var(--scarlet)} .dot.v{background:var(--violet)}
+    .foot{padding:0 14px 12px;color:var(--muted);font-size:13px;min-height:18px}
+    .overlay{position:fixed;inset:0;background:rgba(10,12,16,.56);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+    .overlay.open{display:flex}
+    .detail{width:min(980px,100%);max-height:92vh;overflow:auto;background:#fff;border:3px solid #664626;border-radius:12px;padding:12px}
+    .dtop{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+    .dtop img{width:108px;height:108px;object-fit:contain;border:2px solid #c8a976;border-radius:10px;background:#fff}
+    .meta-no{font-size:13px;color:#654f2e;font-weight:700}
+    .meta-name{font-size:30px;font-weight:800;line-height:1.2}
+    .dtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+    .dtab{border:2px solid #8e6a36;background:#fff4df;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer}
+    .dtab.on{background:#ffd57b;border-color:#a06e12}
+    .pane{display:none}.pane.on{display:block}
+    .pane-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+    .box{border:2px solid #8c6832;border-radius:10px;padding:9px;background:#fff}
+    .box h3{margin:0 0 7px;font-size:14px;color:#4f3a1d}
+    .box.scar h3{color:#b65111}.box.vio h3{color:#5f3fa3}
+    .line{display:block;font-size:13px;line-height:1.42;margin-bottom:2px}
+    .loc-list{margin:0;padding-left:18px}
+    .loc-list li{font-size:13px;line-height:1.42;margin:2px 0;word-break:keep-all}
+    .types{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;background:#f8f8f8;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:700;white-space:nowrap;word-break:keep-all}
+    .chip .ball{width:17px;height:17px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;background:#7a7a7a}
+    .chip .ball img{width:11px;height:11px}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    th,td{border:1px solid #c6ab77;padding:5px 6px;text-align:center}
+    thead th{background:#f9ebce;color:#584222}
+    .total{background:#ffe6bf;font-weight:800;color:#6d4211}
+    .close{margin-top:11px;border:2px solid #7c5220;background:#f2d28e;border-radius:999px;padding:8px 13px;font-weight:700;cursor:pointer}
+    .wrap{border:2px solid #8a6731;border-radius:10px;background:#fff;padding:10px}
+    .nature td.neu{background:#ffeec6;color:#67400a;font-weight:700}
+    .nature td.emp{background:#faf6ec}
+    .scroll{overflow:auto;max-height:560px}
+    .type th:first-child,.type td:first-child{position:sticky;left:0;background:#f8e8c9;z-index:2}
+    .type thead th{position:sticky;top:0;z-index:3}
+    .type th,.type td{white-space:nowrap;word-break:keep-all}
+    .type-ico{display:inline-flex;align-items:center;gap:4px}
+    .type-ico-ball{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.28);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+    .type-ico-ball img{width:9px;height:9px;object-fit:contain;filter:brightness(0) invert(1)}
+    .type-compact{table-layout:fixed;font-size:10px}
+    .type-compact th,.type-compact td{padding:2px 3px}
+    .type-compact th:first-child,.type-compact td:first-child{min-width:58px}
+    .type .hl-end{box-shadow:inset 0 0 0 2px #f2a33a;background:#fff7ea !important}
+    .type td.hl-cell{box-shadow:inset 0 0 0 2px #f2a33a}
+    .e2{background:#ffd9d9;color:#b13030;font-weight:800}.e5{background:#d7ebff;color:#2f669f;font-weight:800}
+    .e0{background:#ededed;color:#666;font-weight:800}.e1{background:#f8f8f8;color:#555}
+    .map{border:2px solid #8a92a9;border-radius:12px;position:relative;width:min(100%,760px);aspect-ratio:1/1;margin:0 auto 10px;background:linear-gradient(180deg,rgba(25,33,58,.10),rgba(16,22,41,.22)),url("./assets/maps/PaldeaMap.jpg"),linear-gradient(120deg,#9ec8f8,#88baf1);background-size:contain,contain,cover;background-repeat:no-repeat;background-position:center,center,center}
+    .mk{position:absolute;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+    .mk.g{background:#e2802f}.mk.s{background:#7a50c5}.mk.t{background:#2f9d68}.mk.f{background:#6f5ea8}
+    .mk-face{position:absolute;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 2px 9px rgba(0,0,0,.45);background:#f4f7ff;z-index:4}
+    .mk-face.g{border-color:#b9590e;box-shadow:0 0 0 2px rgba(185,89,14,.65),0 2px 9px rgba(0,0,0,.45)}
+    .mk-face.s{border-color:#5f37a6;box-shadow:0 0 0 2px rgba(95,55,166,.65),0 2px 9px rgba(0,0,0,.45)}
+    .mk-face.t{border-color:#1f7d4f;box-shadow:0 0 0 2px rgba(31,125,79,.65),0 2px 9px rgba(0,0,0,.45)}
+    .mk-face.f{border-color:#4d3b87;box-shadow:0 0 0 2px rgba(77,59,135,.65),0 2px 9px rgba(0,0,0,.45)}
+    .mk-face img{width:100%;height:100%;object-fit:cover}
+    .mk-face.icon img{object-fit:contain;padding:3px;background:#fff}
+    .mk-label{position:absolute;transform:translate(10px,-20px);font-size:11px;font-weight:800;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.35);border-radius:999px;padding:1px 6px;z-index:6}
+    .map-tip-float{position:fixed;left:0;top:0;z-index:9999;max-width:360px;padding:9px 11px;border:2px solid rgba(0,0,0,.35);border-radius:10px;background:rgba(255,255,255,.97);box-shadow:0 8px 24px rgba(0,0,0,.2);font-size:12px;color:#2b3440;pointer-events:none;display:none;font-weight:700}
+    .map-tip-float.g{border-color:#b9590e;background:linear-gradient(180deg,#fff6ea,#fff)}
+    .map-tip-float.s{border-color:#5f37a6;background:linear-gradient(180deg,#f4efff,#fff)}
+    .map-tip-float.t{border-color:#1f7d4f;background:linear-gradient(180deg,#ebfff4,#fff)}
+    .map-tip-float.f{border-color:#4d3b87;background:linear-gradient(180deg,#f0edff,#fff)}
+    .map-tip-float.p{border-color:#c62828;background:linear-gradient(180deg,#fff1f1,#fff)}
+    .pc-mk{position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;border:2px solid #c62828;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;z-index:3}
+    .pc-mk img{width:11px;height:11px;object-fit:contain}
+    .map-wrap{position:sticky;top:0;z-index:2;background:#fff;max-height:72dvh;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+    .routes-scroll{max-height:320px;overflow:auto;padding-right:0}
+    .routes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+    .rc{border:1px solid #97a2ae;border-radius:8px;padding:7px;background:rgba(255,255,255,.88);font-size:12px;line-height:1.35}
+    .bdg{display:inline-block;color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 7px;margin-right:4px}
+    .bdg.g{background:#d96d20}.bdg.s{background:#6c46b5}.bdg.t{background:#238554}.bdg.f{background:#5a488f}
+    @media (max-width:1080px){
+      .app{flex-direction:column;align-items:stretch}
+      .panel{width:100%}
+      .rail{width:100%;flex:0 0 auto;margin:0 0 8px 0;display:flex;flex-wrap:wrap;gap:6px}
+      .book{flex:1 1 calc(25% - 6px);min-width:82px;border-right:2px solid #76401d;border-radius:10px;text-align:center;margin-bottom:0}
+      .subs{width:100%;flex-direction:row;flex-wrap:wrap;padding-left:0;gap:6px;margin-bottom:2px}
+      .sub{flex:1 1 auto}
+    }
+    @media (max-width:740px){
+      body{padding:8px 0}
+      .app{height:calc(100dvh - 16px)}
+      .meta-name{font-size:24px}
+      .dtop img{width:92px;height:92px}
+      .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+      .card{min-height:118px;padding:5px}
+      .card img{width:44px;height:44px}
+      .no{font-size:10px}
+      .name{font-size:12px;line-height:1.15}
+      .type-stack{top:4px;left:4px;gap:3px}
+      .type-badge{width:12px;height:12px}
+      .type-badge img{width:7px;height:7px}
+      .map{width:100%}
+      .map-wrap{max-height:56dvh}
+      .routes-scroll{max-height:220px;padding-right:0}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail">
+      <button class="book on" data-cat="pokemon" type="button">포켓몬</button>
+      <div id="p-subs" class="subs">
+        <button class="sub on" data-dex="paldea" type="button">팔데아 도감</button>
+        <button class="sub" data-dex="national" type="button">전국도감</button>
+      </div>
+      <button class="book" data-cat="tools" type="button">도구</button>
+      <div id="t-subs" class="subs" style="display:none;">
+        <button class="sub on" data-tool="held" type="button">지닌물건</button>
+        <button class="sub" data-tool="tm" type="button">기술머신</button>
+      </div>
+      <button class="book" data-cat="nature" type="button">성격</button>
+      <button class="book" data-cat="type-chart" type="button">타입상성</button>
+      <button class="book" data-cat="map" type="button">지도</button>
+    </aside>
+
+    <section class="panel">
+      <header class="top">
+        <div id="title" class="title">스칼렛/바이올렛 도감<br>팔데아 No.001-400</div>
+        <div>● ● ●</div>
+      </header>
+      <div class="screen">
+        <div id="controls" class="controls">
+          <input id="search" class="search" type="text" placeholder="번호/이름 검색 (예: 025, 피카츄)">
+          <div id="count" class="count"></div>
+        </div>
+        <div id="grid" class="grid"></div>
+      </div>
+      <div id="footer" class="foot"></div>
+    </section>
+  </div>
+
+  <div id="overlay" class="overlay" aria-hidden="true">
+    <div class="detail" role="dialog" aria-modal="true" aria-label="상세 정보">
+      <div class="dtop">
+        <img id="d-img" alt="이미지">
+        <div>
+          <div id="d-no" class="meta-no"></div>
+          <div id="d-name" class="meta-name"></div>
+        </div>
+      </div>
+      <div id="d-tabs" class="dtabs">
+        <button class="dtab on" data-pane="stats" type="button">능력치</button>
+        <button class="dtab" data-pane="location" type="button">포획장소</button>
+        <button class="dtab" data-pane="moves" type="button">배우는 기술</button>
+      </div>
+      <section id="pane-stats" class="pane on"></section>
+      <section id="pane-location" class="pane"></section>
+      <section id="pane-moves" class="pane"></section>
+      <button id="d-close" class="close" type="button">닫기</button>
+    </div>
+  </div>
+
+  <script src="./sv_paldea_data.js"></script>
+  <script src="./sv_national_data.js"></script>
+  <script src="./sv_move_data.js"></script>
+  <script src="./sv_ability_data.js"></script>
+  <script src="./sv_tool_data.js"></script>
+  <script src="./sv_nature_data.js"></script>
+  <script src="./sv_type_chart_data.js"></script>
+  <script src="./sv_evolution_data.js"></script>
+  <script src="./frlg_type_icons.js"></script>
+  <script>
+    (() => {
+      const paldea = Array.isArray(window.SV_PALDEA_DATA) ? window.SV_PALDEA_DATA : [];
+      const national = Array.isArray(window.SV_NATIONAL_DATA) ? window.SV_NATIONAL_DATA : [];
+      const moves = window.SV_MOVE_DATA || {};
+      const abilityData = window.SV_ABILITY_DATA || {};
+      const tools = window.SV_TOOL_DATA || { tm: [], held: [] };
+      const natures = Array.isArray(window.SV_NATURE_DATA) ? window.SV_NATURE_DATA : [];
+      const chart = window.SV_TYPE_CHART || {};
+      const evoData = window.SV_EVOLUTION_DATA || {};
+      const icons = window.FRLG_TYPE_ICON_DATA || {};
+      const fallbackItemIcon = "./assets/icons/items/key-item-ingame.png";
+      const fallbackSpriteIcon = "./assets/icons/pokeball.svg";
+
+      const statKo = {"hp":"HP","attack":"공격","defense":"방어","special-attack":"특수공격","special-defense":"특수방어","speed":"스피드"};
+      const typeColor = {normal:"#9a9a9a",fire:"#f57d31",water:"#4f8de3",electric:"#f7c531",grass:"#67b93c",ice:"#78d5d6",fighting:"#ce416b",poison:"#ab6ac8",ground:"#d6b55d",flying:"#8fa9de",psychic:"#ef5f8d",bug:"#91c12f",rock:"#c5b78c",ghost:"#6f5bc2",dragon:"#136dc4",dark:"#5a5465",steel:"#5f8ea2",fairy:"#ec8fe6"};
+      const pokemonKoByEn = new Map([...paldea, ...national].map(p => [String(p.en || "").toLowerCase(), p.kr || p.en || ""]));
+      const evoCache = new Map();
+      const routes = [
+        {o:1,k:"gym",n:"세르클 체육관",lv:"Lv.15",x:34,y:79,type:"벌레",badge:"./assets/icons/badges/bug.png",faceNo:216},
+        {o:2,k:"titan",n:"바위주인 클라프",lv:"Lv.16",x:56,y:74,boss:"클라프",faceNo:950},
+        {o:3,k:"gym",n:"볼풍 체육관",lv:"Lv.17",x:61,y:81,type:"풀",badge:"./assets/icons/badges/grass.png",faceNo:185},
+        {o:4,k:"titan",n:"하늘주인",lv:"Lv.19",x:12,y:61,boss:"떨구새",faceNo:962},
+        {o:5,k:"star",n:"스타단 악반",lv:"Lv.21",x:29,y:58,type:"악",faceNo:624},
+        {o:6,k:"gym",n:"동부 체육관",lv:"Lv.24",x:76,y:53,type:"전기",badge:"./assets/icons/badges/electric.png",faceNo:429},
+        {o:7,k:"star",n:"스타단 불반",lv:"Lv.27",x:69,y:66,type:"불꽃",faceNo:324},
+        {o:8,k:"titan",n:"강철주인",lv:"Lv.28",x:75,y:46,boss:"꿈트렁",faceNo:968},
+        {o:9,k:"gym",n:"카라프 체육관",lv:"Lv.30",x:32,y:52,type:"물",badge:"./assets/icons/badges/water.png",faceNo:740},
+        {o:10,k:"star",n:"스타단 독반",lv:"Lv.33",x:59,y:43,type:"독",faceNo:965},
+        {o:11,k:"gym",n:"메자포타 체육관",lv:"Lv.36",x:38,y:40,type:"노말",badge:"./assets/icons/badges/normal.png",faceNo:398},
+        {o:12,k:"gym",n:"몬테네베라 체육관",lv:"Lv.42",x:54,y:22,type:"고스트",badge:"./assets/icons/badges/ghost.png",faceNo:849},
+        {o:13,k:"titan",n:"땅주인",lv:"Lv.44",x:11,y:47,boss:"위대한 엄니 / 무쇠바퀴",faceNo:984},
+        {o:14,k:"gym",n:"알포르나다 체육관",lv:"Lv.45",x:13,y:89,type:"에스퍼",badge:"./assets/icons/badges/psychic.png",faceNo:671},
+        {o:15,k:"gym",n:"글라세도 체육관",lv:"Lv.48",x:54,y:32,type:"얼음",badge:"./assets/icons/badges/ice.png",faceNo:334},
+        {o:16,k:"star",n:"스타단 페어리반",lv:"Lv.51",x:49,y:12,type:"페어리",faceNo:184},
+        {o:17,k:"titan",n:"거짓드래곤 주인",lv:"Lv.55",x:31,y:29,boss:"어써러셔 / 싸리용",faceNo:977},
+        {o:18,k:"star",n:"스타단 격투반",lv:"Lv.56",x:87,y:38,type:"격투",faceNo:979},
+        {o:19,k:"final",n:"최종전",lv:"Lv.62",x:44,y:61,type:"종합",faceNo:1007}
+      ];
+
+      const books = [...document.querySelectorAll(".book")];
+      const pSubs = [...document.querySelectorAll("#p-subs .sub")];
+      const tSubs = [...document.querySelectorAll("#t-subs .sub")];
+      const dTabs = [...document.querySelectorAll(".dtab")];
+
+      const titleEl = document.getElementById("title");
+      const searchEl = document.getElementById("search");
+      const countEl = document.getElementById("count");
+      const footEl = document.getElementById("footer");
+      const controlsEl = document.getElementById("controls");
+      const gridEl = document.getElementById("grid");
+
+      const overlay = document.getElementById("overlay");
+      const dImg = document.getElementById("d-img");
+      const dNo = document.getElementById("d-no");
+      const dName = document.getElementById("d-name");
+      const dTabsEl = document.getElementById("d-tabs");
+      const paneStats = document.getElementById("pane-stats");
+      const paneLocation = document.getElementById("pane-location");
+      const paneMoves = document.getElementById("pane-moves");
+
+      let category = "pokemon";
+      let dexScope = "paldea";
+      let toolScope = "held";
+      let query = "";
+      let activePane = "stats";
+      let detailToken = 0;
+
+      const esc = (v) => String(v == null ? "" : v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\\\"/g,"&quot;").replace(/'/g,"&#39;");
+      const img = (n) => "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + n + ".png";
+      const faceImg = (n) => "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + n + ".png";
+      const starIcon = "./assets/icons/team-star.png";
+      const centerIcon = "./assets/icons/pokeball.svg";
+      const centers = [
+        {n:"남부 1번 포켓몬센터",x:46,y:84},{n:"남부 2번 포켓몬센터",x:56,y:83},{n:"남부 3번 포켓몬센터",x:40,y:74},
+        {n:"남부 4번 포켓몬센터",x:44,y:65},{n:"남부 5번 포켓몬센터",x:30,y:73},{n:"서부 1번 포켓몬센터",x:23,y:65},
+        {n:"서부 2번 포켓몬센터",x:19,y:52},{n:"서부 3번 포켓몬센터",x:22,y:40},{n:"동부 1번 포켓몬센터",x:69,y:61},
+        {n:"동부 2번 포켓몬센터",x:78,y:60},{n:"동부 3번 포켓몬센터",x:83,y:49},{n:"북부 1번 포켓몬센터",x:52,y:28},
+        {n:"북부 2번 포켓몬센터",x:67,y:25},{n:"북부 3번 포켓몬센터",x:67,y:14},{n:"북부 4번 포켓몬센터",x:40,y:18},
+        {n:"글라세도산 포켓몬센터",x:60,y:18},{n:"카세로야호수 포켓몬센터",x:31,y:30},{n:"나페산 포켓몬센터",x:57,y:39},
+        {n:"고정행시티 인근 포켓몬센터",x:53,y:53},{n:"참푸르마을 인근 포켓몬센터",x:64,y:74}
+      ];
+      const split = (raw) => String(raw || "").split(/,\s*/).filter(Boolean);
+      const toolIconSrc = (e) => {
+        const src = String((e && e.icon) || "").trim();
+        return src || fallbackItemIcon;
+      };
+      const toLines = (raw) => {
+        if(Array.isArray(raw)) return raw.map(v=>String(v||"").trim()).filter(Boolean);
+        const txt = String(raw || "").trim();
+        if(!txt) return [];
+        if(txt.includes("\\n")) return txt.split(/\\r?\\n/).map(v=>v.trim()).filter(Boolean);
+        return txt.split(/,\s*/).map(v=>v.trim()).filter(Boolean);
+      };
+      const heldCategoryOrder = ["열매","플레이트/메모리","진화","날씨/필드","전투 소모","전투 보조","능력치 강화","타입 강화","기타"];
+      const heldCategory = (e) => {
+        const kr = String(e.kr || "");
+        const en = String(e.en || "");
+        const ef = String(e.effect || "");
+        const txt = (kr + " " + en + " " + ef).toLowerCase();
+        if(txt.includes("berry") || kr.includes("열매")) return "열매";
+        if(txt.includes("plate") || txt.includes("memory") || kr.includes("플레이트") || kr.includes("메모리")) return "플레이트/메모리";
+        if(txt.includes("진화") || txt.includes("evolve") || txt.includes("stone") || kr.includes("사과") || kr.includes("가면")) return "진화";
+        if(txt.includes("rain") || txt.includes("sun") || txt.includes("snow") || txt.includes("sand") || txt.includes("terrain") || kr.includes("날씨") || kr.includes("모래") || kr.includes("눈") || kr.includes("비") || kr.includes("필드")) return "날씨/필드";
+        if(txt.includes("소모") || txt.includes("once") || txt.includes("한 번") || txt.includes("일회용") || txt.includes("소비")) return "전투 소모";
+        if(txt.includes("정확도") || txt.includes("accuracy") || txt.includes("회피") || txt.includes("급소") || txt.includes("우선도") || txt.includes("critical")) return "전투 보조";
+        if(txt.includes("공격") || txt.includes("방어") || txt.includes("특수") || txt.includes("스피드") || txt.includes("능력치") || txt.includes("stat")) return "능력치 강화";
+        if(txt.includes("타입") || txt.includes("type") || txt.includes("위력") || txt.includes("power")) return "타입 강화";
+        return "기타";
+      };
+      const sortHeldByCategory = (arr) => {
+        const orderIdx = new Map(heldCategoryOrder.map((c,i)=>[c,i]));
+        return (arr || []).slice().sort((a,b)=>{
+          const oa = orderIdx.get(heldCategory(a)) ?? 999;
+          const ob = orderIdx.get(heldCategory(b)) ?? 999;
+          if(oa !== ob) return oa - ob;
+          const an = Number(a.no || 0), bn = Number(b.no || 0);
+          if(an !== bn) return an - bn;
+          return String(a.kr || "").localeCompare(String(b.kr || ""), "ko");
+        });
+      };
+
+      const captureExtra = (raw) => {
+        const txt = String(raw || "");
+        if(!txt) return [];
+        const tags = [
+          { key: "\uC9C4\uD654", label: "\uC9C4\uD654" },
+          { key: "\uAD50\uD658", label: "\uAD50\uD658" },
+          { key: "\uBC30\uD3EC", label: "\uBC30\uD3EC" },
+          { key: "\uC774\uBCA4\uD2B8", label: "\uC774\uBCA4\uD2B8" }
+        ].filter(x => txt.includes(x.key)).map(x => x.label);
+        if(!tags.length) return [];
+        return ["\uC57C\uC0DD \uD3EC\uD68D \uC678 \uD68D\uB4DD: " + tags.join(" / ")];
+      };
+      const koName = (enName) => pokemonKoByEn.get(String(enName || "").toLowerCase()) || String(enName || "");
+      const cleanName = (name) => String(name || "").replace(/-/g, " ");
+      const triggerLabel = (trigger) => {
+        if(trigger === "level-up") return "level up";
+        if(trigger === "trade") return "trade";
+        if(trigger === "use-item") return "use item";
+        if(trigger === "shed") return "shed evolution";
+        return trigger || "other";
+      };
+      function formatEvolutionDetail(d){
+        if(!d) return "no condition data";
+        const parts = [];
+        parts.push(triggerLabel((d.trigger || {}).name || ""));
+        if(d.min_level != null) parts.push("Lv." + d.min_level + "+");
+        if(d.item && d.item.name) parts.push(cleanName(d.item.name) + " item");
+        if(d.held_item && d.held_item.name) parts.push("hold " + cleanName(d.held_item.name));
+        if(d.known_move && d.known_move.name) parts.push("know " + cleanName(d.known_move.name));
+        if(d.known_move_type && d.known_move_type.name) parts.push("know " + cleanName(d.known_move_type.name) + " type move");
+        if(d.location && d.location.name) parts.push("location: " + cleanName(d.location.name));
+        if(d.min_happiness != null) parts.push("happiness " + d.min_happiness + "+");
+        if(d.min_affection != null) parts.push("affection " + d.min_affection + "+");
+        if(d.min_beauty != null) parts.push("beauty " + d.min_beauty + "+");
+        if(d.party_species && d.party_species.name) parts.push("party species: " + cleanName(d.party_species.name));
+        if(d.party_type && d.party_type.name) parts.push("party type: " + cleanName(d.party_type.name));
+        if(d.trade_species && d.trade_species.name) parts.push("trade for " + cleanName(d.trade_species.name));
+        if(d.time_of_day) parts.push("time: " + d.time_of_day);
+        if(d.needs_overworld_rain) parts.push("rain required");
+        if(d.turn_upside_down) parts.push("turn upside down");
+        if(d.relative_physical_stats === 1) parts.push("attack > defense");
+        if(d.relative_physical_stats === -1) parts.push("attack < defense");
+        if(d.relative_physical_stats === 0) parts.push("attack = defense");
+        if(d.gender === 1) parts.push("female");
+        if(d.gender === 2) parts.push("male");
+        return parts.join(" / ");
+      }
+      function fetchEvolutionLines(e){
+        const key = String(Number(e.nationalNo));
+        const lines = evoData[key];
+        if(Array.isArray(lines) && lines.length) return lines;
+        return ["no evolution data"];
+      }
+      function makeEvoList(lines){
+        if(!lines || !lines.length) return "<span class='line'>정보 없음</span>";
+        const items = lines.map(x => {
+          if(String(x).startsWith("- ")) return "<li>" + esc(String(x).slice(2)) + "</li>";
+          return "<li><strong>" + esc(x) + "</strong></li>";
+        }).join("");
+        return "<ul class='loc-list'>" + items + "</ul>";
+      }
+      function renderLocationPane(sList, vList, evoHtml){
+        paneLocation.innerHTML="<div class='pane-grid'><section class='box scar'><h3>스칼렛 포획/입수</h3>"+sList+"</section><section class='box vio'><h3>바이올렛 포획/입수</h3>"+vList+"</section><section class='box'><h3>진화 조건</h3>"+evoHtml+"</section></div>";
+      }
+
+      function typeChip(key){
+        const info = (chart.typeInfo || {})[key] || {ko:key};
+        const c = typeColor[key] || "#888";
+        const ic = icons[key] || "";
+        return "<span class='chip'><span class='ball' style='background:"+esc(c)+";'>" + (ic ? "<img src='"+esc(ic)+"' alt='타입' onerror=\"this.onerror=null;this.remove();\">" : "") + "</span><span>"+esc(info.ko)+"</span></span>";
+      }
+
+      function list(){
+        if(category==="pokemon") return dexScope==="national" ? national : paldea;
+        if(category==="tools") return toolScope==="tm" ? (tools.tm||[]) : sortHeldByCategory(tools.held||[]);
+        return [];
+      }
+
+      function header(){
+        if(category==="pokemon"){ titleEl.innerHTML = dexScope==="national" ? "스칼렛/바이올렛 도감<br>전국 No.001-1025" : "스칼렛/바이올렛 도감<br>팔데아 No.001-400"; return; }
+        if(category==="tools"){ titleEl.innerHTML = toolScope==="tm" ? "스칼렛/바이올렛 도구<br>기술머신 No.001-229" : "스칼렛/바이올렛 도구<br>지닌물건"; return; }
+        if(category==="nature"){ titleEl.innerHTML="스칼렛/바이올렛 공략<br>성격표"; return; }
+        if(category==="type-chart"){ titleEl.innerHTML="스칼렛/바이올렛 공략<br>9세대 타입상성"; return; }
+        titleEl.innerHTML="스칼렛/바이올렛 공략<br>팔데아 추천 공략 순서";
+      }
+
+      function syncTabs(){
+        document.getElementById("p-subs").style.display = category==="pokemon" ? "flex":"none";
+        document.getElementById("t-subs").style.display = category==="tools" ? "flex":"none";
+        pSubs.forEach(x=>x.classList.toggle("on",x.dataset.dex===dexScope));
+        tSubs.forEach(x=>x.classList.toggle("on",x.dataset.tool===toolScope));
+      }
+
+      function syncCtrl(){ controlsEl.style.display = (category==="pokemon"||category==="tools") ? "flex":"none"; }
+
+      function match(e,q){
+        if(!q) return true;
+        const name = String(e.kr||"").toLowerCase();
+        return String(e.no||"").includes(q) || String(e.nationalNo||"").includes(q) || name.includes(q);
+      }
+
+      function renderCards(){
+        const all = list();
+        const q = query.trim().toLowerCase();
+        const show = all.filter(e=>match(e,q));
+        countEl.textContent = "표시: " + show.length + " / " + all.length;
+        footEl.textContent = category==="pokemon" ? "포켓몬 목록" : "도구 목록";
+        gridEl.className = "grid";
+        gridEl.innerHTML = show.map(e=>{
+          if(category==="pokemon"){
+            const hasWildData = (typeof e.wildScarlet === "boolean") || (typeof e.wildViolet === "boolean");
+            const s = hasWildData ? !!e.wildScarlet : !String(e.scarlet||"").includes("입수 불가");
+            const v = hasWildData ? !!e.wildViolet : !String(e.violet||"").includes("입수 불가");
+            const dot = s&&!v ? "<span class='dot s' title='스칼렛 전용'></span>" : (!s&&v ? "<span class='dot v' title='바이올렛 전용'></span>" : "");
+            const types = Array.isArray(e.types) ? e.types.slice(0,2) : [];
+            const typeBadges = types.map(t=>{
+              const typeKo = ((chart.typeInfo || {})[t] || {}).ko || t || "타입 없음";
+              const typeIcon = icons[t] || "";
+              const typeBg = typeColor[t] || "#7a7a7a";
+              return typeIcon ? "<span class='type-badge' title='"+esc(typeKo)+"' style='background:"+esc(typeBg)+";'><img src='"+esc(typeIcon)+"' alt='타입' onerror=\"this.onerror=null;this.remove();\"></span>" : "";
+            }).join("");
+            const typeStack = typeBadges ? "<span class='type-stack'>"+typeBadges+"</span>" : "";
+            const cls = "card" + ((dexScope==="national" && !e.obtainable) ? " unob" : "");
+            return "<button class='"+cls+"' data-no='"+esc(e.no)+"' type='button'>"+typeStack+dot+"<img loading='lazy' src='"+esc(img(e.nationalNo))+"' alt='포켓몬' onerror=\"this.onerror=null;this.src='"+esc(fallbackSpriteIcon)+"';\"><div class='no'>#"+esc(String(e.no).padStart(3,"0"))+"</div><div class='name'>"+esc(e.kr)+"</div></button>";
+          }
+          if(toolScope==="tm"){
+            return "<button class='card' data-no='"+esc(e.no)+"' type='button'><img loading='lazy' src='./assets/icons/items/tm-ingame.png' alt='TM'><div class='no'>"+esc(e.code||"TM")+"</div><div class='name'>"+esc(e.kr)+"</div></button>";
+          }
+          return "<button class='card' data-no='"+esc(e.no)+"' type='button'><img loading='lazy' src='"+esc(toolIconSrc(e))+"' alt='물건' onerror=\"this.onerror=null;this.src='./assets/icons/items/key-item-ingame.png';\"><div class='no'>ITEM "+esc(String(e.no).padStart(3,"0"))+"</div><div class='name'>"+esc(e.kr)+"</div></button>";
+        }).join("");
+      }
+
+      function renderNature(){
+        const stats=["attack","defense","special-attack","special-defense","speed"];
+        const m = new Map(); natures.forEach(n=>m.set((n.up||"")+"/"+(n.down||""),n));
+        const head = stats.map(s=>"<th>"+esc(statKo[s])+" ↑</th>").join("");
+        const body = stats.map(down=>{
+          const cells = stats.map(up=>{
+            const n=m.get(up+"/"+down); if(!n) return "<td class='emp'></td>";
+            return "<td class='"+(up===down?"neu":"")+"'>"+esc(n.kr)+"</td>";
+          }).join("");
+          return "<tr><th>"+esc(statKo[down])+" ↓</th>"+cells+"</tr>";
+        }).join("");
+        gridEl.className="wrap"; gridEl.innerHTML="<table class='nature'><thead><tr><th>상승/하락</th>"+head+"</tr></thead><tbody>"+body+"</tbody></table>";
+        countEl.textContent = "성격: " + natures.length;
+        footEl.textContent = "물리/특수 타입 패널은 제거하고 성격 표만 유지했습니다.";
+      }
+
+      function renderType(){
+        const order = Array.isArray(chart.order)?chart.order:[];
+        const eff = chart.effectiveness || {};
+        const txt=v=>v===2?"2x":(v===0.5?"0.5x":(v===0?"0x":"1x"));
+        const cls=v=>v===2?"e2":(v===0.5?"e5":(v===0?"e0":"e1"));
+        const typeLabel=(k)=>(((chart.typeInfo||{})[k]||{}).ko||k);
+        const typeHead=(k)=>{
+          const ko = typeLabel(k);
+          const icon = icons[k] || "";
+          const c = typeColor[k] || "#7a7a7a";
+          if(!icon) return esc(ko);
+          return "<span class='type-ico'><span class='type-ico-ball' style='background:"+esc(c)+";'><img src='"+esc(icon)+"' alt='타입' onerror=\"this.onerror=null;this.remove();\"></span><span>"+esc(ko)+"</span></span>";
+        };
+        const head=order.map((d,di)=>"<th data-col='"+di+"' title='"+esc(typeLabel(d))+"'>"+typeHead(d)+"</th>").join("");
+        const rows=order.map(a=>{
+          const ai = order.indexOf(a);
+          const cols=order.map((d,di)=>{ const r=eff[a]||{}; const v=typeof r[d]==="number"?r[d]:1; return "<td data-row='"+ai+"' data-col='"+di+"' class='"+cls(v)+"'>"+txt(v)+"</td>"; }).join("");
+          return "<tr><th data-row='"+ai+"' title='"+esc(typeLabel(a))+"'>"+typeHead(a)+"</th>"+cols+"</tr>";
+        }).join("");
+        gridEl.className="wrap"; gridEl.innerHTML="<div class='scroll'><table class='type type-compact'><thead><tr><th>공격\\\\방어</th>"+head+"</tr></thead><tbody>"+rows+"</tbody></table></div>";
+        countEl.textContent = "타입 수: " + order.length;
+        footEl.textContent = "페어리 포함 9세대 타입 상성표입니다.";
+        const table = gridEl.querySelector("table.type");
+        if(table){
+          let lastCells = [];
+          const clearHover = ()=>{
+            lastCells.forEach(el=>el.classList.remove("hl-end","hl-cell"));
+            lastCells = [];
+          };
+          table.addEventListener("mouseover", (ev)=>{
+            const td = ev.target.closest("td[data-row][data-col]");
+            if(!td || !table.contains(td)) return;
+            clearHover();
+            const r = td.getAttribute("data-row");
+            const c = td.getAttribute("data-col");
+            const rowHead = table.querySelector("tbody th[data-row='"+r+"']");
+            const colHead = table.querySelector("thead th[data-col='"+c+"']");
+            td.classList.add("hl-cell");
+            if(rowHead) rowHead.classList.add("hl-end");
+            if(colHead) colHead.classList.add("hl-end");
+            lastCells = [td, rowHead, colHead].filter(Boolean);
+          });
+          table.addEventListener("mouseleave", clearHover);
+        }
+      }
+
+      function renderMap(){
+        const kindClass = (k)=>k==='gym'?'g':(k==='star'?'s':(k==='titan'?'t':'f'));
+        const tipText = (r)=>{
+          const kind = r.k==='gym' ? '체육관' : (r.k==='star' ? '스타단' : (r.k==='titan' ? '주인' : '최종전'));
+          const extra = r.k==='titan' ? ("주인 포켓몬: " + (r.boss || "-")) : ("타입: " + (r.type || "-"));
+          return r.o + ". " + r.n + " | " + kind + " | 권장 레벨 " + r.lv + " | " + extra;
+        };
+        const marks = routes.map(r=>{
+          const src = r.k==='gym' && r.badge ? r.badge : (r.k==='star' ? starIcon : faceImg(r.faceNo || 25));
+          const faceClass = "mk-face "+kindClass(r.k)+((r.k==='gym' || r.k==='star') ? " icon" : "");
+          const tip = esc(tipText(r));
+          const face = "<span class='"+faceClass+" map-hover' data-tip='"+tip+"' data-tip-kind='"+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'><img src='"+esc(src)+"' alt='face' onerror=\"this.onerror=null;this.src='"+esc(fallbackSpriteIcon)+"';\"></span>";
+          const dot = "<span class='mk "+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'></span>";
+          const label = "<span class='mk-label map-hover' data-tip='"+tip+"' data-tip-kind='"+kindClass(r.k)+"' style='left:"+r.x+"%;top:"+r.y+"%;'>"+esc(r.o)+"</span>";
+          return face + dot + label;
+        }).join("");
+        const centerMarks = centers.map(c=>{
+          const tip = esc("포켓몬센터 | " + c.n);
+          return "<span class='pc-mk map-hover' data-tip-kind='p' data-tip='"+tip+"' style='left:"+c.x+"%;top:"+c.y+"%;'><img src='"+esc(centerIcon)+"' alt='center' onerror=\"this.onerror=null;this.src='"+esc(fallbackSpriteIcon)+"';\"></span>";
+        }).join("");
+        const cards = routes.map(r=>{
+          const tag = r.k==='gym' ? '체육관' : (r.k==='star' ? '스타단' : (r.k==='titan' ? '주인' : '최종전'));
+          const extra = r.k==='titan' ? ("<br>주인 포켓몬: " + esc(r.boss || "-")) : ("<br>타입: " + esc(r.type || "-"));
+          return "<div class='rc'><span class='bdg "+kindClass(r.k)+"'>"+tag+"</span><strong>"+esc(r.o+". "+r.n)+"</strong><br>권장 레벨: "+esc(r.lv)+extra+"</div>";
+        }).join("");
+        gridEl.className="wrap";
+        gridEl.innerHTML="<h3 style='margin:0 0 8px;font-size:16px;color:#394639;font-weight:800;'>팔데아 지방 지도 + 추천 공략 순서</h3><div class='map-wrap'><div class='map'>"+centerMarks+marks+"</div></div><div class='routes-scroll'><div class='routes'>"+cards+"</div></div>";
+        countEl.textContent = "메인 공략 단계: " + routes.length;
+        footEl.textContent = "체육관 · 스타단 · 주인 · 최종전 권장 순서를 지도에 표시했습니다.";
+        let tipEl = document.getElementById("map-tip-float");
+        if(!tipEl){
+          tipEl = document.createElement("div");
+          tipEl.id = "map-tip-float";
+          tipEl.className = "map-tip-float";
+          document.body.appendChild(tipEl);
+        }
+        const placeTip = (ev)=>{
+          const pad = 14;
+          let x = ev.clientX + 14;
+          let y = ev.clientY + 18;
+          const w = tipEl.offsetWidth || 280;
+          const h = tipEl.offsetHeight || 60;
+          if(x + w + pad > window.innerWidth) x = window.innerWidth - w - pad;
+          if(y + h + pad > window.innerHeight) y = window.innerHeight - h - pad;
+          if(x < pad) x = pad;
+          if(y < pad) y = pad;
+          tipEl.style.left = x + "px";
+          tipEl.style.top = y + "px";
+        };
+        const hovers = gridEl.querySelectorAll(".map-hover");
+        hovers.forEach(el=>{
+          el.addEventListener("mouseenter", (ev)=>{
+            tipEl.textContent = el.getAttribute("data-tip") || "";
+            tipEl.className = "map-tip-float " + (el.getAttribute("data-tip-kind") || "");
+            tipEl.style.display = "block";
+            placeTip(ev);
+          });
+          el.addEventListener("mousemove", (ev)=>{ placeTip(ev); });
+          el.addEventListener("mouseleave", ()=>{
+            tipEl.style.display = "none";
+          });
+        });
+      }
+
+      function setPane(name){
+        activePane=name;
+        dTabs.forEach(t=>t.classList.toggle("on",t.dataset.pane===name));
+        paneStats.classList.toggle("on",name==="stats");
+        paneLocation.classList.toggle("on",name==="location");
+        paneMoves.classList.toggle("on",name==="moves");
+      }
+
+      function rowsMove(arr,key,empty){
+        if(!arr||!arr.length) return "<tr><td colspan='6'>"+esc(empty)+"</td></tr>";
+        return arr.map(r=>"<tr><td>"+esc(r[key]==null?'-':r[key])+"</td><td>"+esc(r.kr||'')+"</td><td>"+esc(((chart.typeInfo||{})[r.type]||{}).ko||r.type||'-')+"</td><td>"+esc(r.category||'-')+"</td><td>"+esc(r.power==null?'-':r.power)+"</td><td>"+esc(r.accuracy==null?'-':r.accuracy)+"</td></tr>").join("");
+      }
+
+      function abilityRow(label, name){
+        if(!name) return "";
+        const desc = abilityData[name] || "특성 설명 정보가 없습니다.";
+        return "<span class='line'><strong>"+esc(label)+": "+esc(name)+"</strong></span><span class='line'>설명: "+esc(desc)+"</span>";
+      }
+
+      function detailPokemon(e){
+        const stats = e.baseStats || {};
+        const types = (e.types||[]).map(typeChip).join("") || "<span class='line'>타입 정보 없음</span>";
+        const abilities = (e.abilities||[]).map(a=>abilityRow("일반 특성", a)).join("") + abilityRow("숨겨진 특성", e.hiddenAbility);
+        const sRows = ["hp","attack","defense","special-attack","special-defense","speed"].map(k=>"<tr><th>"+esc(statKo[k])+"</th><td>"+esc(stats[k]||0)+"</td></tr>").join("");
+        paneStats.innerHTML = "<div class='pane-grid'><section class='box'><h3>기본 정보</h3><div class='types'>"+types+"</div>"+(abilities||"<span class='line'>특성 정보 없음</span>")+"</section><section class='box'><h3>종족값</h3><table><thead><tr><th>항목</th><th>수치</th></tr></thead><tbody>"+sRows+"<tr class='total'><th>합계</th><td>"+esc(stats.total||0)+"</td></tr></tbody></table></section></div>";
+        const sLines = toLines(e.scarlet).concat(captureExtra(e.scarlet));
+        const vLines = toLines(e.violet).concat(captureExtra(e.violet));
+        const sList = sLines.length ? "<ul class='loc-list'>"+sLines.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>" : "<span class='line'>정보 없음</span>";
+        const vList = vLines.length ? "<ul class='loc-list'>"+vLines.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>" : "<span class='line'>정보 없음</span>";
+        renderLocationPane(sList, vList, makeEvoList(fetchEvolutionLines(e)));
+        const m = moves[String(e.nationalNo)] || {levelUp:[],tm:[]};
+        paneMoves.innerHTML="<div class='pane-grid'><section class='box'><h3>레벨업 기술</h3><table><thead><tr><th>레벨</th><th>기술</th><th>타입</th><th>분류</th><th>위력</th><th>명중</th></tr></thead><tbody>"+rowsMove(m.levelUp,'level','레벨업 기술이 없습니다.')+"</tbody></table></section><section class='box'><h3>기술머신 기술</h3><table><thead><tr><th>TM</th><th>기술</th><th>타입</th><th>분류</th><th>위력</th><th>명중</th></tr></thead><tbody>"+rowsMove(m.tm,'code','기술머신 기술이 없습니다.')+"</tbody></table></section></div>";
+      }
+
+      function detailTool(e){
+        dTabsEl.style.display="none";
+        const s = split((e.scarlet||[]).join ? e.scarlet.join(", ") : (e.scarlet||e.effect||"정보 없음"));
+        const v = split((e.violet||[]).join ? e.violet.join(", ") : (e.violet||e.effect||"정보 없음"));
+        paneStats.classList.remove("on"); paneMoves.classList.remove("on"); paneLocation.classList.add("on");
+        paneLocation.innerHTML="<div class='pane-grid'><section class='box'><h3>설명</h3><span class='line'>"+esc(e.effect||"설명 없음")+"</span></section><section class='box scar'><h3>스칼렛 입수</h3>"+s.map(x=>"<span class='line'>"+esc(x)+"</span>").join("")+"</section><section class='box vio'><h3>바이올렛 입수</h3>"+v.map(x=>"<span class='line'>"+esc(x)+"</span>").join("")+"</section></div>";
+      }
+
+      function open(no){
+        const e = list().find(x=>Number(x.no)===Number(no));
+        if(!e) return;
+        dName.textContent = e.kr || "";
+        dNo.textContent = category==="pokemon" ? ("No."+String(e.no).padStart(3,"0")) : (toolScope==="tm" ? (e.code||"TM") : ("ITEM "+String(e.no).padStart(3,"0")));
+        if(category==="pokemon"){
+          dImg.onerror = () => { dImg.onerror = null; dImg.src = fallbackSpriteIcon; };
+          dImg.src = img(e.nationalNo);
+          dTabsEl.style.display="flex";
+          detailPokemon(e);
+          setPane(activePane);
+        }else{
+          if(toolScope==="tm"){
+            dImg.onerror = null;
+            dImg.src = "./assets/icons/items/tm-ingame.png";
+          }else{
+            dImg.onerror = () => { dImg.onerror = null; dImg.src = fallbackItemIcon; };
+            dImg.src = toolIconSrc(e);
+          }
+          detailTool(e);
+        }
+        overlay.classList.add("open");
+        overlay.setAttribute("aria-hidden","false");
+      }
+
+      function close(){ overlay.classList.remove("open"); overlay.setAttribute("aria-hidden","true"); }
+
+      function render(){
+        header(); syncTabs(); syncCtrl();
+        if(category==="nature"){ renderNature(); return; }
+        if(category==="type-chart"){ renderType(); return; }
+        if(category==="map"){ renderMap(); return; }
+        renderCards();
+      }
+
+      books.forEach(b=>b.addEventListener("click",function(){ category=this.dataset.cat; books.forEach(x=>x.classList.toggle("on",x===this)); query=""; searchEl.value=""; render(); }));
+      pSubs.forEach(s=>s.addEventListener("click",function(){ dexScope=this.dataset.dex||"paldea"; category="pokemon"; books.forEach(x=>x.classList.toggle("on",x.dataset.cat==="pokemon")); query=""; searchEl.value=""; render(); }));
+      tSubs.forEach(s=>s.addEventListener("click",function(){ toolScope=this.dataset.tool||"held"; category="tools"; books.forEach(x=>x.classList.toggle("on",x.dataset.cat==="tools")); query=""; searchEl.value=""; render(); }));
+      searchEl.addEventListener("input",function(){ query=this.value||""; render(); });
+      gridEl.addEventListener("click",e=>{ const c=e.target.closest(".card"); if(c) open(c.dataset.no); });
+      dTabs.forEach(t=>t.addEventListener("click",function(){ setPane(this.dataset.pane||"stats"); }));
+      document.getElementById("d-close").addEventListener("click",close);
+      overlay.addEventListener("click",e=>{ if(e.target===overlay) close(); });
+      document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&overlay.classList.contains("open")) close(); });
+      render();
+    })();
+  </script>
+</body>
+</html>
